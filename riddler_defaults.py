@@ -1,5 +1,6 @@
 #
 # General settings
+#TASK! defualts shall be added here
 #
 nodes_file = "network_test"
 data_file = "test.pickle"

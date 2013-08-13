@@ -53,7 +53,8 @@ class controller(threading.Thread):
             self.control()
         except KeyboardInterrupt:
             return
-
+	
+	#TASK! Change this when making a new test
     def control(self):
         self.start_time = time.time()
         self.init_ranges()
@@ -163,7 +164,7 @@ class controller(threading.Thread):
                 # Quit if we are told to
                 if self.end.is_set():
                     return
-
+	#TASK! Make sure loops are updated
     def test_rlnc(self):
         for loop in self.loops:
             for error in self.args.errors:
@@ -274,6 +275,7 @@ class controller(threading.Thread):
             node.reconnect()
 
     # Setup various ranges based on configured profile
+    #TASK! When making a new test
     def init_ranges(self):
         args = self.args
         self.loops = range(args.test_loops)
@@ -327,6 +329,7 @@ class controller(threading.Thread):
             self.run_info_format = "\n#{loop:2d} | {rate:4.0f} kb/s | {coding:8s} | e: {errors} | ack: {ack_timeout:3.01f} | req: {req_timeout:3.01f} | encs: {encoders:1d} | ETA: {eta:s}"
 
     # Configure the next run_info to be sent to each node
+    #TASK! set info
     def set_run_info(self,  **kwarg):
         self.update_run_no(kwarg.get('loop'))
         self.run_info['profile'] = self.args.test_profile
@@ -346,7 +349,7 @@ class controller(threading.Thread):
         self.run_info['gen_size'] = self.args.gen_size
         self.run_info['packet_size'] = self.args.packet_size
         self.run_info['iperf_len'] = self.args.iperf_len
-        self.run_info['fixed_overshoot'] = self.args.fixed_overshoot[kwarg['coding']]
+        self.run_info['fixed_overshoot'] = self.args.fixed_overshoot.get(kwarg['coding'])
         self.run_info['encoders'] = kwarg.get('encoders')
         self.run_info['encoder_timeout'] = self.args.encoder_timeout
         self.run_info['decoder_timeout'] = self.args.decoder_timeout

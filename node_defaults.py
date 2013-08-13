@@ -1,5 +1,6 @@
 # Default configuration for riddler nodes
 # Options must be valid python code
+#TASK! Keep the data in line with riddler_node.py
 
 wifi_iface = "wlp0s29f7u1"
 host = ""

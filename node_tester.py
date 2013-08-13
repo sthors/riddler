@@ -15,7 +15,8 @@ class client(threading.Thread):
         self.running = False
         self.ping_p = None
         self.timer = threading.Timer(run_info['test_time']*2, self.kill_client)
-
+	
+	#TASK! Make run fit to the purpose of the 
     def run(self):
         h = self.dest_node['host']
         t = str(self.run_info['test_time'])
