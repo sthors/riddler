@@ -66,11 +66,11 @@ class client(threading.Thread):
         
         #TASK! RASP! CHANGE! Hardcode hack to make it work
         
-        h = "-host=" + 'localhost'#+ str(self.dest_node['host'])
+        h = "-host=" +  str(self.dest_node['host'])
         i = "-iteration=" + '100' #FIX!
-        s = "-symbols=" + '160'   #str(self.run_info['gen_size']) #FIX!
+        s = "-symbols=" + str(self.run_info['gen_size']) #FIX!
         l = "-symbol_size=" + str(self.run_info['packet_size'])
-        r = "-rate=" + '100' #str(self.run_info['rate'])
+        r = "-rate=" + '1000' #str(self.run_info['rate'])
         g = "-port=" + str(self.args.mesh_port)
         t = "-type=" + 'source'
         #FIX! symbol_siz is missing
@@ -131,6 +131,7 @@ class server(threading.Thread):
         super(server, self).__init__(None)
         self.controller = controller
         self.args = args
+        self.run_info = run_info
         self.protocol = run_info['protocol']
         self.tcp_window = run_info['tcp_window']
         self.iperf_len = run_info['iperf_len']
@@ -151,10 +152,10 @@ class server(threading.Thread):
         
         h = "-host=" + str(self.dest_node['host']) #TASK!
         i = "-iteration=" + '100' #FIX!
-        s = "-symbols=" + '160'   #str(self.run_info['gen_size']) #FIX!
-        l = "-symbol_size=" + self.run_info['packet_size']
+        s = "-symbols=" + str(self.run_info['gen_size']) #FIX!
+        l = "-symbol_size=" + str(self.run_info['packet_size'])
         r = "-rate=" + '1000' # str(self.run_info['rate'])
-        g = "-port=" + self.args.mesh_port
+        g = "-port=" + str(self.args.mesh_port)
         t = "-type=" + 'receiver'
         
         self.cmd = [p, h, i, s, l, r, g, t]

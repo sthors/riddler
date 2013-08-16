@@ -126,8 +126,9 @@ class tcp_handler(SocketServer.BaseRequestHandler):
             self.tester_server.kill()
 
         if self.run_info['role'] == "destination":
+            print "    I am a destination"
             self.tester_server = tester.server(self, self.server.args, obj.run_info)
-
+        
         # Wait for previous iperf clients to finish
         for client in self.tester_clients:
             print("  Waiting for clients")

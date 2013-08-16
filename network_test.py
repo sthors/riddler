@@ -16,5 +16,6 @@ relay = node.node("relay", "panda6.personal.es.aau.dk")
 bob = node.node("bob", "panda7.personal.es.aau.dk")
 """
 alice.add_dest(bob) #Alice client bob server
+bob.add_source(alice)
 #bob.add_dest(alice)
 #bob.set_enable_ratio(True)
