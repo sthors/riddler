@@ -147,8 +147,12 @@ class tcp_handler(SocketServer.BaseRequestHandler):
 
     def start_run(self, obj):
         print("# Start run")
-
-        self.send_sample()
+        
+        #RASP!
+        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'):
+            self.send_sample()
+        elif self.run_info['profile'] in ('rasp_rank'):
+            print "   Avoiding send sample"
 
         for client in self.tester_clients:
             client.start()
@@ -190,11 +194,17 @@ class tcp_handler(SocketServer.BaseRequestHandler):
             self.report(obj)
             print("  Run error: " + e)
         else:
+            print(" rasp_send_dummy")
             print("  Run done")
             
     def finish_run(self, obj):
         print("# Finish run")
-        self.send_sample(finish=True)
+        
+        #RASP!
+        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'):
+            self.send_sample(finish=True)
+        elif self.run_info['profile'] in ('rasp_rank'):
+            print "Avoiding send_sample() finish_run()"
 
         if self.run_info and self.run_info['coding'] == 'helper' and not self.setup.check_fox():
             err = interface.node(interface.RUN_ERROR, error="fox failed")
