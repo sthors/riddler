@@ -67,6 +67,7 @@ class client(threading.Thread):
         #TASK! RASP! CHANGE! Hardcode hack to make it work
         
         h = "-host=" +  str(self.dest_node['host'])
+        f = "-field=" + "binary"
         i = "-iteration=" + '100' #FIX!
         s = "-symbols=" + str(self.run_info['gen_size']) #FIX!
         l = "-symbol_size=" + str(self.run_info['packet_size'])
@@ -77,7 +78,7 @@ class client(threading.Thread):
         
         p = os.path.dirname(self.args.rasp_udp_path) + "/rasp"
         
-        cmd = [p, h, i, s, l, r, g, t]
+        cmd = [p, h, f, i, s, l, r, g, t]
         print cmd
         
         self.timer.start()
@@ -151,6 +152,7 @@ class server(threading.Thread):
         p = os.path.dirname(self.args.rasp_udp_path) + "/rasp"
         
         #h = "-host=" + str(self.dest_node['host'])
+        f = "-field=" + "binary"
         i = "-iteration=" + '100' #FIX!
         s = "-symbols=" + str(self.run_info['gen_size']) #FIX!
         l = "-symbol_size=" + str(self.run_info['packet_size'])
@@ -158,7 +160,7 @@ class server(threading.Thread):
         g = "-port=" + str(self.args.mesh_port)
         t = "-type=" + 'receiver'
         
-        self.cmd = [p, i, s, l, r, g, t]
+        self.cmd = [p, f, i, s, l, r, g, t]
         print self.cmd
         
         print("  Starting server: {}".format(self.cmd))
