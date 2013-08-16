@@ -151,9 +151,17 @@ class tcp_handler(SocketServer.BaseRequestHandler):
 
         for client in self.tester_clients:
             client.start()
-
+        
+        #TASK! make the rasp profile and source a dummy client
         # If no clients exists, we don't want the controller to
         # wait for us, so we send an empty result immediately.
+        
+        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'):
+            self.send_dummy_result()
+        elif self.run_info['profile'] in ('rasp_rank'):
+            self.rasp_send_dummy_result()
+        
+    def send_dummy_result(self): #RASP!
         try:
             if self.run_info['role'] == 'helper':
                 print("  Sending dummy result")
@@ -167,7 +175,22 @@ class tcp_handler(SocketServer.BaseRequestHandler):
             print("  Run error: " + e)
         else:
             print("  Run done")
-
+            
+    def rasp_send_dummy_result(self):
+        try:
+            if self.run_info['role'] == 'source':
+                print("  Sending dummy result (raspberry)")
+                time.sleep(1)
+                obj = interface.node(interface.RUN_RESULT, result=None)
+                self.report(obj)
+        except AttributeError as e:
+            time.sleep(1)
+            obj = interface.node(interface.RUN_ERROR, error=e)
+            self.report(obj)
+            print("  Run error: " + e)
+        else:
+            print("  Run done")
+            
     def finish_run(self, obj):
         print("# Finish run")
         self.send_sample(finish=True)
@@ -199,7 +222,10 @@ class tcp_handler(SocketServer.BaseRequestHandler):
     # Send our own information to the controller
     def send_node_info(self):
         args = self.server.args
-        mac = open("/sys/class/net/{}/address".format(args.wifi_iface)).read()
+        if os.path.exists("/sys/class/net/{}/address".format(args.wifi_iface)):
+            mac = open("/sys/class/net/{}/address".format(args.wifi_iface)).read()
+        else:
+            mac = None
         obj = interface.node(interface.NODE_INFO, mesh_host=args.mesh_host, mesh_port=args.mesh_port, mesh_mac=mac)
         self.report(obj)
 

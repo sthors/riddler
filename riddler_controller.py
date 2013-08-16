@@ -5,7 +5,7 @@ import riddler_interface as interface
 class controller(threading.Thread):
     def __init__(self, args):
         super(controller, self).__init__(None)
-        self.name = "controller"
+        self.name = "   controller   "
         self.args = args
         self.run_info = {}
 
@@ -45,8 +45,9 @@ class controller(threading.Thread):
                 return True
         return False
 
-    def run(self):
+    def run(self): #TASK! real run
         # Disable pause
+        print("   run   ")
         self.pause.set()
 
         try:
@@ -56,12 +57,14 @@ class controller(threading.Thread):
 	
 	#TASK! Change this when making a new test
     def control(self):
+        print("   controller   ")
         self.start_time = time.time()
         self.init_ranges()
         self.initial_eta = self.test_time * self.test_count
         profile = self.args.test_profile
 
         # Select control function based on configured profile
+        #TASK! add a new test
         if profile in ("udp_rates","power_meas"):
             self.test_rates()
 
@@ -79,7 +82,9 @@ class controller(threading.Thread):
 
         elif profile == "rlnc":
             self.test_rlnc()
-
+            
+        elif profile == "rasp_rank": #RASP!
+			self.test_rasp_rank()
         else:
             print("Profile '{0}' not supported.".format(profile))
             return
@@ -89,7 +94,14 @@ class controller(threading.Thread):
             total_time = time.time() - self.start_time
             print("Original ETA was {}".format(self.format_time(self.initial_eta)))
             print("Test completed in {}".format(self.format_time(total_time)))
-
+    
+    #Control fuinction to test rank on rasberry
+    def test_rasp_rank(self):
+        for loop in self.loops:
+            self.set_run_info(loop=loop)
+            self.execute_run()
+            
+    
     # Control function to swipe UDP rates
     def test_rates(self):
         hold = self.args.hold_time
@@ -99,8 +111,9 @@ class controller(threading.Thread):
             for rate in self.rates:
                 for coding in self.codings:
                     self.set_run_info(loop=loop, rate=rate, hold=hold, purge=purge, coding=coding)
+                    print "   execute   "#CHANGE!
                     self.execute_run()
-
+                    print " execution done" #CHANGE!
                     # Quit if we are told to
                     if self.end.is_set():
                         return
@@ -327,7 +340,15 @@ class controller(threading.Thread):
             self.test_count = self.args.test_loops * len(self.args.errors) * len(self.codings) * len(self.args.ack_timeout) * len(self.args.req_timeout) * len(self.args.encoders)
             self.result_format = "{:10s} {time:6.1f} s | {rate:6.1f} kb/s | {bytes:6.1f} kB | {packets:6.1f}"
             self.run_info_format = "\n#{loop:2d} | {rate:4.0f} kb/s | {coding:8s} | e: {errors} | ack: {ack_timeout:3.01f} | req: {req_timeout:3.01f} | encs: {encoders:1d} | ETA: {eta:s}"
-
+        
+        if args.test_profile == 'rasp_rank': #RASP!
+            self.protocol = 'udp'
+            self.codings = [True]
+            self.test_count = args.test_loops * len(self.codings)
+            self.result_format = "{:10s} {time:6.1f} s | {rate:6.1f} kb/s | {bytes:6.1f} kB | {packets:6.1f}"
+            self.run_info_format = "\n#{loop:2d}"
+            #self.test_count = len(self.rates) * args.test_loops * len(self.codings)
+        
     # Configure the next run_info to be sent to each node
     #TASK! set info
     def set_run_info(self,  **kwarg):
@@ -349,7 +370,7 @@ class controller(threading.Thread):
         self.run_info['gen_size'] = self.args.gen_size
         self.run_info['packet_size'] = self.args.packet_size
         self.run_info['iperf_len'] = self.args.iperf_len
-        self.run_info['fixed_overshoot'] = self.args.fixed_overshoot.get(kwarg['coding'])
+        self.run_info['fixed_overshoot'] = self.args.fixed_overshoot.get(kwarg.get('coding'))
         self.run_info['encoders'] = kwarg.get('encoders')
         self.run_info['encoder_timeout'] = self.args.encoder_timeout
         self.run_info['decoder_timeout'] = self.args.decoder_timeout
@@ -382,13 +403,13 @@ class controller(threading.Thread):
 
         # Start timer to recover in case of failure
         self.restart_timer()
-
+        print "   riddler prepare run" #CHANGE!
         for node in self.nodes:
             node.prepare_run(self.run_info)
 
         for node in self.nodes:
             node.wait()
-
+        
     # Perform a run on each node
     def exec_node(self):
         # Start it

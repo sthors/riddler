@@ -18,11 +18,21 @@ class client(threading.Thread):
 	
 	#TASK! Make run fit to the purpose of the 
     def run(self):
+        print ("   real run")#CHANGE!
+        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'):
+            self.python_client()
+        elif self.run_info['profile'] in ('rasp_rank'):
+            self.rasp_client()
+            
+    def python_client(self):
+		#The command given to c++ program
         h = self.dest_node['host']
         t = str(self.run_info['test_time'])
         l = str(self.run_info['iperf_len'])
         r = str(self.run_info['rate'])
+        
         p = os.path.dirname(self.args.udp_path) + "/udp_client.py"
+        
         cmd = [p, h, l, r, t, "1"]
 
         print("  Starting client: {}".format(cmd))
@@ -31,7 +41,7 @@ class client(threading.Thread):
         self.running = True
         self.p.wait()
         self.running = False
-
+        
         (stdout, stderr) = self.p.communicate()
         if stderr:
             self.report_error("udp_client.py error: {}".format(stderr))
@@ -50,6 +60,34 @@ class client(threading.Thread):
         else:
             self.report_error("Missing result")
 
+    def rasp_client(self): #CHANGE!
+        #The command given to the c++ program
+        print "   rasp_client node_tester"
+        
+        #TASK! RASP! CHANGE! Hardcode hack to make it work
+        
+        h = "-host=" + 'localhost'#+ str(self.dest_node['host'])
+        i = "-iteration=" + '100' #FIX!
+        s = "-symbols=" + '160'   #str(self.run_info['gen_size']) #FIX!
+        l = "-symbol_size=" + str(self.run_info['packet_size'])
+        r = "-rate=" + '100' #str(self.run_info['rate'])
+        g = "-port=" + str(self.args.mesh_port)
+        t = "-type=" + 'source'
+        #FIX! symbol_siz is missing
+        
+        p = os.path.dirname(self.args.rasp_udp_path) + "/rasp"
+        
+        cmd = [p, h, i, s, l, r, g, t]
+        print cmd
+        
+        self.timer.start()
+        self.p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
+        self.running = True
+        self.p.wait()
+        self.running = False
+        
+        
+    
     # Brutally kill a running subprocesses
     def kill_client(self):
         # Make sure even have a running subprocess
@@ -82,6 +120,7 @@ class client(threading.Thread):
 
     # Send back an error to the controller
     def report_error(self, error):
+        #print error
         print("  Reporting error")
         obj = interface.node(interface.RUN_ERROR, error=error)
         self.controller.report(obj)
@@ -98,7 +137,61 @@ class server(threading.Thread):
         self.running = False
         self.start()
 
-    def run(self):
+    def run(self):#TASK! Need to be corrected to mabe two functions
+        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'):
+            print "   python server" #CHANGE!
+            self.python_server()
+        elif self.run_info['profile'] in ('rasp_rank'):
+            print "   rasp_server"
+            self.rasp_server()
+            
+    def rasp_server(self):
+        #l = str(self.iperf_len)
+        p = os.path.dirname(self.args.rasp_udp_path) + "/rasp"
+        
+        h = "-host=" + str(self.dest_node['host']) #TASK!
+        i = "-iteration=" + '100' #FIX!
+        s = "-symbols=" + '160'   #str(self.run_info['gen_size']) #FIX!
+        l = "-symbol_size=" + self.run_info['packet_size']
+        r = "-rate=" + '1000' # str(self.run_info['rate'])
+        g = "-port=" + self.args.mesh_port
+        t = "-type=" + 'receiver'
+        
+        self.cmd = [p, h, i, s, l, r, g, t]
+        print self.cmd
+        
+        print("  Starting server: {}".format(self.cmd))
+
+        self.p = subprocess.Popen(self.cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
+        self.running = True
+        self.p.wait()
+        self.running = False
+        
+        (stdout,stderr) = self.p.communicate()
+
+        if stderr:
+            obj = interface.node(interface.RUN_ERROR, error=stderr)
+            self.controller.report(obj)
+            return
+        elif not stdout:
+            obj = interface.node(interface.RUN_ERROR, error="no server result")
+            self.controller.report(obj)
+            return
+
+        result = {}
+        for line in stdout.splitlines():
+            key,val = line.split(":")
+            result[key] = float(val)
+
+        if result:
+            obj = interface.node(interface.RUN_RESULT, result=result)
+            self.controller.report(obj)
+        else:
+            obj = interface.node(interface.RUN_ERROR, error="empty server result")
+            self.controller.report(obj)
+        
+        
+    def python_server(self):
         l = str(self.iperf_len)
         p = os.path.dirname(self.args.udp_path) + "/udp_server.py"
         self.cmd = [p, l, "1"]

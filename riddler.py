@@ -89,7 +89,7 @@ class riddler:
 
 	def start(self):
 		# Create a data object for results and samples
-		print "b"
+		#print "b"
 		self.data = data.data(self.args)
 		self.data.add_nodes(self.nodes)
 
@@ -97,7 +97,7 @@ class riddler:
 		self.client.export_event(interface.STARTED)
 
 		# Start test controller
-		print("Starting test controller")
+		print("   Starting test controller   ")
 		self.controller = controller.controller(self.args)
 		self.controller.nodes = self.nodes
 		self.controller.data = self.data

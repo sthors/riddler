@@ -27,20 +27,31 @@ class setup:
             self.fox_process.terminate()
             del self.fox_process
 	
-	#TASK! add our setup functions
+	#TASK! add our setup functions make a switch case
     # Call the different setup functions
     def apply_setup(self, run_info):
-        if not self.setup_batman(run_info):
-            return False
+        print "   apply setup"#CHANGE!
+        if not 'rasp' in run_info["profile"]:
+            if not self.setup_batman(run_info):
+                return False
 
-        if not self.setup_tcp(run_info):
-            return False
+            if not self.setup_tcp(run_info):
+                return False
 
-        if not self.setup_iface(run_info):
-            return False
+            if not self.setup_iface(run_info):
+                return False
 
-        if not self.setup_fox(run_info):
-            return False
+            if not self.setup_fox(run_info):
+                return False
+        else:
+            if not self.setup_tcp(run_info):
+                return False
+
+            if not self.setup_iface(run_info):
+                return False
+
+            if not self.setup_fox(run_info):
+                return False
 
         return True
 

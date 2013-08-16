@@ -43,6 +43,8 @@ def send(sock, obj):
 
     s = pickle.dumps(obj)
     l = tostruct(s)
+    #print "pickle dumps:",s #CHANGE!
+    #print "tostruct(s):",l
     try:
         sock.send(l)
         sock.send(s)

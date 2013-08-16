@@ -220,6 +220,8 @@ class node(threading.Thread):
 		self.total_cpu = None
 		self.total_idle = None
 		self.reply.clear()
+		#print("interface.PREPARERUN:",interface.PREPARE_RUN) #CHANGE!
+		#print("run_info:",run_info)
 
 		interface.send_node(self.socket, interface.PREPARE_RUN, dests=self.get_dests(), run_info=run_info)
 
