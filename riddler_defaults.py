@@ -1,6 +1,5 @@
 #
 # General settings
-#TASK! defualts shall be added here
 #
 nodes_file = "network_test"
 data_file = "test.pickle"
@@ -77,7 +76,7 @@ tcp_algo = 'westwood'
 # Settings for rlnc
 #
 errors = [(99, 99, 10), (99, 99, 30), (99, 99, 50)]
-rlnc_rates = {'helper': 4000, 'nohelper': 4000, 'noloss': 4000, 'loss': 4000}
+rlnc_rates = {'helper': 4000, 'nohelper': 4000, 'noloss': 4000, 'loss': 4000, True: 4000}
 rlnc_codings = ['nohelper']
 gen_size = 64
 packet_size = 1454
@@ -94,3 +93,8 @@ req_timeout=[.1, .2, .3, .4, .5, .6, .7, .8, .9, 1, 1.1]
 fox_verbose = 3
 helper_threshold = 1
 systematic = 1
+
+#
+# Settings for raspberry
+#
+fields = ['binary', 'binary8']

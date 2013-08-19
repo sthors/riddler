@@ -15,7 +15,6 @@ available_algos = "tcp_available_congestion_control"
 window_read = "tcp_rmem"
 window_write = "tcp_wmem"
 
-#TASK! Make this fit the rasberry PI project. Add our functions
 class setup:
     def __init__(self, args):
         self.error = None
@@ -27,10 +26,8 @@ class setup:
             self.fox_process.terminate()
             del self.fox_process
 	
-	#TASK! add our setup functions make a switch case
     # Call the different setup functions
     def apply_setup(self, run_info):
-        print "   apply setup"#CHANGE!
         if not 'rasp' in run_info["profile"]:
             if not self.setup_batman(run_info):
                 return False

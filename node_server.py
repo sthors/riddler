@@ -56,6 +56,7 @@ class tcp_handler(SocketServer.BaseRequestHandler):
         print("# Disconnect from controller")
         for client in self.tester_clients:
             print("  Killing client")
+            client.stop()
             client.kill_client()
             #client.kill_ping(force=True)
             if client.is_alive():
@@ -112,10 +113,11 @@ class tcp_handler(SocketServer.BaseRequestHandler):
     def prepare_run(self, obj):
         print("# Prepare run")
         self.run_info = obj.run_info
+        print "after run_info, node:",self.run_info['profile']
         # Apply received configurations
         if not self.setup.apply_setup(obj.run_info):
             self.report(interface.node(interface.PREPARE_ERROR, error=self.setup.error))
-
+        print "after self.report node_server"
         # Inform the sampler about the new run
         #if not self.sampler.set_run_info(obj.run_info):
         #    print(self.sampler.error)
@@ -124,15 +126,19 @@ class tcp_handler(SocketServer.BaseRequestHandler):
         # (Re)start iperf server
         if self.tester_server:
             self.tester_server.kill()
-
+        
+        print "after tester_server node_server, kill test"
+        
         if self.run_info['role'] == "destination":
             print "    I am a destination"
+            #print "arguments:",self.server.args
+            #print "run_info:", obj.run_info
             self.tester_server = tester.server(self, self.server.args, obj.run_info)
         
         # Wait for previous iperf clients to finish
         for client in self.tester_clients:
             print("  Waiting for clients")
-            client.join()
+            client.stop()
 
         # Prepare new iperf client threads
         self.tester_clients = []
@@ -148,16 +154,16 @@ class tcp_handler(SocketServer.BaseRequestHandler):
     def start_run(self, obj):
         print("# Start run")
         
-        #RASP!
-        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'):
+        print "profile:",self.run_info['profile']
+        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP!
             self.send_sample()
         elif self.run_info['profile'] in ('rasp_rank'):
-            print "   Avoiding send sample"
+            pass
+            #print "   Avoiding send sample"
 
         for client in self.tester_clients:
             client.start()
         
-        #TASK! make the rasp profile and source a dummy client
         # If no clients exists, we don't want the controller to
         # wait for us, so we send an empty result immediately.
         
@@ -169,7 +175,7 @@ class tcp_handler(SocketServer.BaseRequestHandler):
     def send_dummy_result(self): #RASP!
         try:
             if self.run_info['role'] == 'helper':
-                print("  Sending dummy result")
+                #print("  Sending dummy result")
                 time.sleep(1)
                 obj = interface.node(interface.RUN_RESULT, result=None)
                 self.report(obj)
@@ -184,7 +190,7 @@ class tcp_handler(SocketServer.BaseRequestHandler):
     def rasp_send_dummy_result(self):
         try:
             if self.run_info['role'] == 'source':
-                print("  Sending dummy result (raspberry)")
+                #print("  Sending dummy result (raspberry)")
                 time.sleep(1)
                 obj = interface.node(interface.RUN_RESULT, result=None)
                 self.report(obj)
@@ -194,17 +200,15 @@ class tcp_handler(SocketServer.BaseRequestHandler):
             self.report(obj)
             print("  Run error: " + e)
         else:
-            print(" rasp_send_dummy")
             print("  Run done")
             
     def finish_run(self, obj):
         print("# Finish run")
         
-        #RASP!
-        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'):
+        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP!
             self.send_sample(finish=True)
         elif self.run_info['profile'] in ('rasp_rank'):
-            print "Avoiding send_sample() finish_run()"
+            pass
 
         if self.run_info and self.run_info['coding'] == 'helper' and not self.setup.check_fox():
             err = interface.node(interface.RUN_ERROR, error="fox failed")
@@ -215,6 +219,9 @@ class tcp_handler(SocketServer.BaseRequestHandler):
             err = interface.node(interface.RUN_ERROR, error="fox failed")
             self.report(err)
             return
+            
+        for client in self.tester_clients:
+            client.stop()
 
         # Report back to controller that we are done
         time.sleep(1)

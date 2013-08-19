@@ -32,9 +32,7 @@ class sampler(threading.Thread):
             interval = self.run_info['sample_interval']
             # Do the sampling
             start = time.time()
-            print "  sample nc"#CHANGE!
             self.sample_nc()
-            print "   after"
             nc = time.time()
             self.sample_iw()
             iw = time.time()
@@ -119,7 +117,6 @@ class sampler(threading.Thread):
         try:
             output = self.run_cmd(cmd)
         except IOError as e:
-            print("sample_nc, node_sampler") #DEBUG!
             self.report_error(e)
             return
 
@@ -145,7 +142,6 @@ class sampler(threading.Thread):
         try:
             output = self.run_cmd(cmd)
         except IOError as e:
-            print("sample_iw, node_sampler") #DEBUG!
             self.report_error(e)
             return
 

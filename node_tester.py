@@ -15,17 +15,22 @@ class client(threading.Thread):
         self.running = False
         self.ping_p = None
         self.timer = threading.Timer(run_info['test_time']*2, self.kill_client)
-	
-	#TASK! Make run fit to the purpose of the 
+    
     def run(self):
-        print ("   real run")#CHANGE!
         if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'):
             self.python_client()
         elif self.run_info['profile'] in ('rasp_rank'):
             self.rasp_client()
-            
+    
+    def stop(self):
+        if not self.running:
+            return
+        
+        print("  kill client")
+        self.p.terminate()
+    
     def python_client(self):
-		#The command given to c++ program
+        #The command given to c++ program
         h = self.dest_node['host']
         t = str(self.run_info['test_time'])
         l = str(self.run_info['iperf_len'])
@@ -60,23 +65,22 @@ class client(threading.Thread):
         else:
             self.report_error("Missing result")
 
-    def rasp_client(self): #CHANGE!
+    def rasp_client(self):
         #The command given to the c++ program
-        print "   rasp_client node_tester"
         
-        #TASK! RASP! CHANGE! Hardcode hack to make it work
+        #print "meshport:", self.args.mesh_port
+        #print "port:",self.args.port
         
-        h = "-host=" +  str(self.dest_node['host'])
-        f = "-field=" + "binary"
-        i = "-iteration=" + '100' #FIX!
-        s = "-symbols=" + str(self.run_info['gen_size']) #FIX!
-        l = "-symbol_size=" + str(self.run_info['packet_size'])
-        r = "-rate=" + '1000' #str(self.run_info['rate'])
-        g = "-port=" + str(self.args.mesh_port)
-        t = "-type=" + 'source'
-        #FIX! symbol_siz is missing
+        h = "--host=" +  str(self.dest_node['host'])
+        f = "--field=" + str(self.run_info['field'])
+        i = "--iteration=" + str(self.run_info['test_num'])
+        s = "--symbols=" + str(self.run_info['gen_size'])
+        l = "--symbol_size=" + str(self.run_info['packet_size'])
+        r = "--rate=" + str(self.run_info['rate'])
+        g = "--port=" + str(self.args.mesh_port)
+        t = "--type=" + 'source'
         
-        p = os.path.dirname(self.args.rasp_udp_path) + "/rasp"
+        p = os.path.dirname(self.args.rasp_udp_path) + self.args.program
         
         cmd = [p, h, f, i, s, l, r, g, t]
         print cmd
@@ -139,28 +143,29 @@ class server(threading.Thread):
         self.running = False
         self.start()
 
-    def run(self):#TASK! Need to be corrected to mabe two functions
-        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'):
-            print "   python server" #CHANGE!
+    def run(self):
+        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP!
             self.python_server()
         elif self.run_info['profile'] in ('rasp_rank'):
-            print "   rasp_server"
             self.rasp_server()
             
     def rasp_server(self):
         #l = str(self.iperf_len)
-        p = os.path.dirname(self.args.rasp_udp_path) + "/rasp"
+        p = os.path.dirname(self.args.rasp_udp_path) + self.args.program
         
-        #h = "-host=" + str(self.dest_node['host'])
-        f = "-field=" + "binary"
-        i = "-iteration=" + '100' #FIX!
-        s = "-symbols=" + str(self.run_info['gen_size']) #FIX!
-        l = "-symbol_size=" + str(self.run_info['packet_size'])
-        r = "-rate=" + '1000' # str(self.run_info['rate'])
-        g = "-port=" + str(self.args.mesh_port)
-        t = "-type=" + 'receiver'
+        #print "meshport server:", self.args.mesh_port
+        #print "port server:",self.args.port
         
-        self.cmd = [p, f, i, s, l, r, g, t]
+        f = "--field=" + str(self.run_info['field'])
+        i = "--iteration=" + str(self.run_info['test_num'])
+        s = "--symbols=" + str(self.run_info['gen_size']) #FIX!
+        l = "--symbol_size=" + str(self.run_info['packet_size'])
+        r = "--rate=" + str(self.run_info['rate'])
+        g = "--port=" + str(self.args.mesh_port)
+        t = "--type=" + 'dest'
+        d = "--format=" + "python"
+        
+        self.cmd = [p, f, i, s, l, r, g, t, d]
         print self.cmd
         
         print("  Starting server: {}".format(self.cmd))
@@ -170,8 +175,9 @@ class server(threading.Thread):
         self.p.wait()
         self.running = False
         
+        print("server done")
         (stdout,stderr) = self.p.communicate()
-
+        print stdout
         if stderr:
             obj = interface.node(interface.RUN_ERROR, error=stderr)
             self.controller.report(obj)
@@ -180,19 +186,15 @@ class server(threading.Thread):
             obj = interface.node(interface.RUN_ERROR, error="no server result")
             self.controller.report(obj)
             return
-
-        result = {}
-        for line in stdout.splitlines():
-            key,val = line.split(":")
-            result[key] = float(val)
-
+        
+        result = eval(stdout)
+            
         if result:
             obj = interface.node(interface.RUN_RESULT, result=result)
             self.controller.report(obj)
         else:
             obj = interface.node(interface.RUN_ERROR, error="empty server result")
             self.controller.report(obj)
-        
         
     def python_server(self):
         l = str(self.iperf_len)
@@ -220,7 +222,7 @@ class server(threading.Thread):
         for line in stdout.splitlines():
             key,val = line.split(": ")
             result[key] = float(val)
-
+        
         if result:
             obj = interface.node(interface.RUN_RESULT, result=result)
             self.controller.report(obj)

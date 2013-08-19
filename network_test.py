@@ -10,12 +10,15 @@ bob = node.node("bob", "panda6.personal.es.aau.dk")
 """
 alice = node.node("source", "localhost")
 bob = node.node("destination", "localhost", 8898)
+#catja = node.node("destination", "localhost", 8897)
 """
 alice = node.node("alice", "panda5.personal.es.aau.dk")
 relay = node.node("relay", "panda6.personal.es.aau.dk")
 bob = node.node("bob", "panda7.personal.es.aau.dk")
 """
 alice.add_dest(bob) #Alice client bob server
+#alice.add_dest(catja)
 bob.add_source(alice)
+#catja.add_source(alice)
 #bob.add_dest(alice)
 #bob.set_enable_ratio(True)

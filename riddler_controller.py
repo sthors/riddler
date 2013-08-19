@@ -14,6 +14,7 @@ class controller(threading.Thread):
         self.recover_timer = None
         self.end = threading.Event()
         self.pause = threading.Event()
+        self.test_num = 0
 
     # Stop the controller
     def stop(self):
@@ -45,7 +46,7 @@ class controller(threading.Thread):
                 return True
         return False
 
-    def run(self): #TASK! real run
+    def run(self):
         # Disable pause
         print("   run   ")
         self.pause.set()
@@ -55,7 +56,6 @@ class controller(threading.Thread):
         except KeyboardInterrupt:
             return
 	
-	#TASK! Change this when making a new test
     def control(self):
         print("   controller   ")
         self.start_time = time.time()
@@ -64,7 +64,6 @@ class controller(threading.Thread):
         profile = self.args.test_profile
 
         # Select control function based on configured profile
-        #TASK! add a new test
         if profile in ("udp_rates","power_meas"):
             self.test_rates()
 
@@ -98,9 +97,18 @@ class controller(threading.Thread):
     #Control fuinction to test rank on rasberry
     def test_rasp_rank(self):
         for loop in self.loops:
-            self.set_run_info(loop=loop)
-            self.execute_run()
-            
+            for field in self.fields:
+                print "field:",field
+                print "loop:", loop
+                print "set_run_info test_rap_rank"
+                rate = self.args.rlnc_rates[True]
+                self.set_run_info(loop=loop, rate=rate, field=field)
+                print "execute_run test_rasp_rank"
+                self.execute_run()
+                print "after execute_run test_rasp_rank"
+                # Quit if we are told to
+                if self.end.is_set():
+                    return
     
     # Control function to swipe UDP rates
     def test_rates(self):
@@ -111,9 +119,7 @@ class controller(threading.Thread):
             for rate in self.rates:
                 for coding in self.codings:
                     self.set_run_info(loop=loop, rate=rate, hold=hold, purge=purge, coding=coding)
-                    print "   execute   "#CHANGE!
                     self.execute_run()
-                    print " execution done" #CHANGE!
                     # Quit if we are told to
                     if self.end.is_set():
                         return
@@ -177,7 +183,7 @@ class controller(threading.Thread):
                 # Quit if we are told to
                 if self.end.is_set():
                     return
-	#TASK! Make sure loops are updated
+
     def test_rlnc(self):
         for loop in self.loops:
             for error in self.args.errors:
@@ -202,6 +208,7 @@ class controller(threading.Thread):
             self.wait_pause()
 
             self.prepare_run()
+            self.test_num += 1
 
             # Let the network settle before next test
             self.sleep(self.args.test_sleep)
@@ -227,11 +234,14 @@ class controller(threading.Thread):
                     #print("Discarding result because of previous error")
                     self.redo = False
                     #continue
-
-                if not self.save_samples():
-                    print("Samples failed; redoing test")
-                    continue
-
+                
+                if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP!
+                    if not self.save_samples():
+                        print("Samples failed; redoing test")
+                        continue
+                elif self.run_info['profile'] in ('rasp_rank'):
+                    pass
+            
                 # Successful test
                 self.save_results()
 
@@ -344,13 +354,13 @@ class controller(threading.Thread):
         if args.test_profile == 'rasp_rank': #RASP!
             self.protocol = 'udp'
             self.codings = [True]
+            self.rates = range(args.rate_start, args.rate_stop+1, args.rate_step)
             self.test_count = args.test_loops * len(self.codings)
-            self.result_format = "{:10s} {time:6.1f} s | {rate:6.1f} kb/s | {bytes:6.1f} kB | {packets:6.1f}"
+            self.result_format = "{:10s} {iteration:6.1f} s | {rank:6.1f} kb/s | {seq:6.1f} kB | {itr:6.1f}"
             self.run_info_format = "\n#{loop:2d}"
-            #self.test_count = len(self.rates) * args.test_loops * len(self.codings)
+            self.fields = args.fields
         
     # Configure the next run_info to be sent to each node
-    #TASK! set info
     def set_run_info(self,  **kwarg):
         self.update_run_no(kwarg.get('loop'))
         self.run_info['profile'] = self.args.test_profile
@@ -383,7 +393,9 @@ class controller(threading.Thread):
         self.run_info['errors'] = kwarg.get('errors')
         self.run_info['ack_timeout'] = kwarg.get('ack')
         self.run_info['req_timeout'] = kwarg.get('req')
-
+        self.run_info['test_num'] = self.test_num
+        self.run_info['field'] = kwarg.get('field')
+        
         # Update the data storage with the new run info
         self.data.add_run_info(self.run_info)
 
@@ -403,10 +415,9 @@ class controller(threading.Thread):
 
         # Start timer to recover in case of failure
         self.restart_timer()
-        print "   riddler prepare run" #CHANGE!
         for node in self.nodes:
             node.prepare_run(self.run_info)
-
+        
         for node in self.nodes:
             node.wait()
         
@@ -441,11 +452,16 @@ class controller(threading.Thread):
     def save_results(self):
         for node in self.nodes:
             result = node.get_result()
+
             # Some nodes don't measure results
             if not result:
                 continue
             self.data.add_result(node.name, result)
-            self.print_result(node, result)
+            if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP!
+                self.print_result(node, result)
+            elif self.run_info['profile'] in ('rasp_rank'):
+                pass
+            
 
     # Save sample measurements received during the test
     def save_samples(self):

@@ -568,7 +568,7 @@ class tcp_algos_config(QGroupBox):
         args.tcp_algos = algos
 
 
-class parameters(QWidget): #TASK!
+class parameters(QWidget):
     def __init__(self, parent=None):
         super(parameters, self).__init__(parent)
         self.socket = None

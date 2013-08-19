@@ -18,7 +18,6 @@ try:
 except ImportError:
 	print("Unable to load config file: {0}".format(args.config))
 	sys.exit(1)
-#TASK! defualts shall be added here
 parser.add_argument("--rate_start", type=int)
 parser.add_argument("--rate_stop", type=int)
 parser.add_argument("--rate_step", type=int)
@@ -64,6 +63,7 @@ parser.add_argument("--systematic", type=bool)
 parser.add_argument("--fox_verbose", type=int)
 parser.add_argument("--helper_threshold", type=float)
 parser.add_argument("--rlnc_rates", type=dict)
+parser.add_argument("--fields", type=list)
 parser.set_defaults(**defaults)
 args = parser.parse_args()
 

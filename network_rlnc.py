@@ -15,6 +15,4 @@ dest = node.node("two", "rasp02.personal.es.aau.dk")
 source.add_dest(dest)
 dest.add_source(source)
 
-#TASK! Add node profiles here, ID
-
 #Git test
