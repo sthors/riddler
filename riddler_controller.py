@@ -441,6 +441,7 @@ class controller(threading.Thread):
     # Tell the nodes to clean up and wait for them to report back
     def finish_run(self):
         for node in self.nodes:
+            print "node:", node #DEBUG!
             node.finish_run()
 
         for node in self.nodes:
@@ -448,7 +449,7 @@ class controller(threading.Thread):
 
         self.recover_timer.cancel()
 
-    # Store measured data
+    
     def save_results(self):
         for node in self.nodes:
             result = node.get_result()
@@ -459,8 +460,8 @@ class controller(threading.Thread):
             self.data.add_result(node.name, result)
             if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP!
                 self.print_result(node, result)
-            elif self.run_info['profile'] in ('rasp_rank'):
-                pass
+            elif self.run_info['profile'] in ('rasp_rank'): #TASK! run save result function here
+                print "save_result riddler_controller result:",result #CHANGE!
             
 
     # Save sample measurements received during the test

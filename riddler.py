@@ -84,7 +84,6 @@ class riddler:
 			self.quit()
 			return
 		# Connect to nodes
-		print "a"
 		self.start_nodes()
 
 	def start(self):
@@ -177,8 +176,6 @@ class riddler:
 	# Start node thread and wait for information from each node
 	def start_nodes(self):
 		for node in self.nodes:
-			#h
-			print "c"
 			node.start()
 
 		try:
@@ -252,7 +249,6 @@ def print_help():
 
 
 if __name__ == "__main__":
-	print "good day"
 	r = riddler(args)
 
 	try:
