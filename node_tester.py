@@ -71,6 +71,7 @@ class client(threading.Thread):
         #print "meshport:", self.args.mesh_port
         #print "port:",self.args.port
         
+        m = "--max_tx=" + "500" #FIX!
         h = "--host=" +  str(self.dest_node['host'])
         f = "--field=" + str(self.run_info['field'])
         i = "--iteration=" + str(self.run_info['test_num'])
@@ -82,7 +83,7 @@ class client(threading.Thread):
         
         p = os.path.dirname(self.args.rasp_udp_path) + self.args.program
         
-        cmd = [p, h, f, i, s, l, r, g, t]
+        cmd = [p, h, f, i, s, l, r, g, t, m]
         print cmd
         
         self.timer.start()
@@ -156,6 +157,7 @@ class server(threading.Thread):
         #print "meshport server:", self.args.mesh_port
         #print "port server:",self.args.port
         
+        m = "--max_tx=" + "500" #FIX!
         f = "--field=" + str(self.run_info['field'])
         i = "--iteration=" + str(self.run_info['test_num'])
         s = "--symbols=" + str(self.run_info['gen_size']) #FIX!
@@ -165,7 +167,7 @@ class server(threading.Thread):
         t = "--type=" + 'dest'
         d = "--format=" + "python"
         
-        self.cmd = [p, f, i, s, l, r, g, t, d]
+        self.cmd = [p, f, i, s, l, r, g, t, d, m]
         print self.cmd
         
         print("  Starting server: {}".format(self.cmd))
