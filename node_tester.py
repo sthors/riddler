@@ -72,7 +72,7 @@ class client(threading.Thread):
         #print "port:",self.args.port
         
         m = "--max_tx=" + "500" #FIX!
-        h = "--host=" +  str(self.dest_node['host'])
+        h = "--host=" +  "10.0.0.255"#str(self.dest_node['host'])
         f = "--field=" + str(self.run_info['field'])
         i = "--iteration=" + str(self.run_info['test_num'])
         s = "--symbols=" + str(self.run_info['gen_size'])
@@ -84,6 +84,7 @@ class client(threading.Thread):
         p = os.path.dirname(self.args.rasp_udp_path) + self.args.program
         
         cmd = [p, h, f, i, s, l, r, g, t, m]
+        time.sleep(5)
         print cmd
         
         self.timer.start()
@@ -189,9 +190,9 @@ class server(threading.Thread):
             obj = interface.node(interface.RUN_ERROR, error="no server result")
             self.controller.report(obj)
             return
-        
+        print "stdout:", stdout
         result = eval(stdout)
-            
+        print "result:", result
         if result:
             obj = interface.node(interface.RUN_RESULT, result=result)
             self.controller.report(obj)
