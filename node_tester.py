@@ -157,7 +157,8 @@ class server(threading.Thread):
         #print "meshport server:", self.args.mesh_port
         #print "port server:",self.args.port
         
-        m = "--max_tx=" + "500" #FIX!
+        #m = "--max_tx=" + "500" #FIX!
+        h = "--host=''"
         f = "--field=" + str(self.run_info['field'])
         i = "--iteration=" + str(self.run_info['test_num'])
         s = "--symbols=" + str(self.run_info['gen_size']) #FIX!
@@ -167,7 +168,7 @@ class server(threading.Thread):
         t = "--type=" + 'dest'
         d = "--format=" + "python"
         
-        self.cmd = [p, f, i, s, l, r, g, t, d, m]
+        self.cmd = [p, h, f, i, s, l, r, g, t, d]
         print self.cmd
         
         print("  Starting server: {}".format(self.cmd))
