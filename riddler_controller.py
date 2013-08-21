@@ -48,7 +48,6 @@ class controller(threading.Thread):
 
     def run(self):
         # Disable pause
-        print("   run   ")
         self.pause.set()
 
         try:
@@ -57,7 +56,7 @@ class controller(threading.Thread):
             return
 	
     def control(self):
-        print("   controller   ")
+        #print("   controller   ")
         self.start_time = time.time()
         self.init_ranges()
         self.initial_eta = self.test_time * self.test_count
@@ -98,8 +97,8 @@ class controller(threading.Thread):
     def test_rasp_rank(self):
         for loop in self.loops:
             for field in self.fields:
-                print "field:",field
-                print "loop:", loop
+                #print "field:",field
+                #print "loop:", loop
                 rate = self.args.rlnc_rates[True]
                 self.set_run_info(loop=loop, rate=rate, field=field)
                 self.execute_run()
@@ -357,7 +356,7 @@ class controller(threading.Thread):
             self.rates = range(args.rate_start, args.rate_stop+1, args.rate_step)
             self.test_count = args.test_loops * len(self.codings)
             self.result_format = "{:10s} {received_packets:6.1f} | {last_transmitted_seq_num:6.1f}"
-            self.run_info_format = "\n#{loop:2d}"
+            self.run_info_format = "\n# loop cnt:{loop:2d} | field: {field:10s}"
             self.fields = args.fields
         
     # Configure the next run_info to be sent to each node

@@ -96,7 +96,7 @@ class riddler:
 		self.client.export_event(interface.STARTED)
 
 		# Start test controller
-		print("   Starting test controller   ")
+		#print("   Starting test controller   ")
 		self.controller = controller.controller(self.args)
 		self.controller.nodes = self.nodes
 		self.controller.data = self.data
