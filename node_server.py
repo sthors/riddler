@@ -152,7 +152,7 @@ class tcp_handler(SocketServer.BaseRequestHandler):
         print("# Start run")
         
         #print "profile:",self.run_info['profile']
-        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP!
+        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP! NEW_TEST!
             self.send_sample()
         elif self.run_info['profile'] in ('rasp_rank'):
             pass
@@ -201,7 +201,7 @@ class tcp_handler(SocketServer.BaseRequestHandler):
     def finish_run(self, obj):
         print("# Finish run")
         
-        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP!
+        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP! NEW_TEST!
             self.send_sample(finish=True)
         elif self.run_info['profile'] in ('rasp_rank'):
             pass

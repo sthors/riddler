@@ -83,6 +83,7 @@ class controller(threading.Thread):
             
         elif profile == "rasp_rank": #RASP!
 			self.test_rasp_rank()
+        #RASP! NEW_TEST!
         else:
             print("Profile '{0}' not supported.".format(profile))
             return
@@ -93,6 +94,7 @@ class controller(threading.Thread):
             print("Original ETA was {}".format(self.format_time(self.initial_eta)))
             print("Test completed in {}".format(self.format_time(total_time)))
     
+    #RASP! NEW_TEST!
     #Control fuinction to test rank on rasberry
     def test_rasp_rank(self):
         for loop in self.loops:
@@ -231,7 +233,7 @@ class controller(threading.Thread):
                     self.redo = False
                     #continue
                 
-                if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP! #TASK!
+                if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP! NEW_TEST!
                     if not self.save_samples():
                         print("Samples failed; redoing test")
                         continue
@@ -358,6 +360,7 @@ class controller(threading.Thread):
             self.result_format = "{:10s} Received packets: {received_packets:6.1f} | Last transmitted seq num: {last_transmitted_seq_num:6.1f}"
             self.run_info_format = "\n# loop cnt:{loop:2d} | field: {field:10s}"
             self.fields = args.fields
+        #RASP! NEW_TEST!
         
     # Configure the next run_info to be sent to each node
     def set_run_info(self,  **kwarg):

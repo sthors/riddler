@@ -17,7 +17,7 @@ class client(threading.Thread):
         self.timer = threading.Timer(run_info['test_time']*2, self.kill_client)
     
     def run(self):
-        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'):
+        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP! NEW_TEST!
             self.python_client()
         elif self.run_info['profile'] in ('rasp_rank'):
             self.rasp_client()
@@ -84,7 +84,7 @@ class client(threading.Thread):
         p = os.path.dirname(self.args.rasp_udp_path) + self.args.program
         
         cmd = [p, h, f, i, s, l, r, g, t, m]
-        time.sleep(1) #RASP!
+        time.sleep(2) #RASP!
         print cmd
         
         self.timer.start()
@@ -146,7 +146,7 @@ class server(threading.Thread):
         self.start()
 
     def run(self):
-        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP!
+        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP! NEW_TEST!
             self.python_server()
         elif self.run_info['profile'] in ('rasp_rank'):
             self.rasp_server()
