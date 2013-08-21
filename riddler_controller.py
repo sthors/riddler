@@ -353,7 +353,7 @@ class controller(threading.Thread):
             self.codings = [True]
             self.rates = range(args.rate_start, args.rate_stop+1, args.rate_step)
             self.test_count = args.test_loops * len(self.codings)
-            self.result_format = "{:10s} {iteration:6.1f} s | {rank:6.1f} kb/s | {seq:6.1f} kB | {itr:6.1f}"
+            self.result_format = "{:10s} {Received packages:6.1f} | {last transmitted seq number:6.1f}"
             self.run_info_format = "\n#{loop:2d}"
             self.fields = args.fields
         
