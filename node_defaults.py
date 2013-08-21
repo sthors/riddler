@@ -4,7 +4,7 @@
 wifi_iface = "wlp0s29f7u1"
 host = ""
 port = 8899
-mesh_host = "localhost"
+mesh_host = "10.0.0.255"
 mesh_port = 8877
 power_dev = '/dev/ttyUSB0'
 fox_path = '/root/rlncd/build/src/source'
