@@ -100,12 +100,9 @@ class controller(threading.Thread):
             for field in self.fields:
                 print "field:",field
                 print "loop:", loop
-                print "set_run_info test_rap_rank"
                 rate = self.args.rlnc_rates[True]
                 self.set_run_info(loop=loop, rate=rate, field=field)
-                print "execute_run test_rasp_rank"
                 self.execute_run()
-                print "after execute_run test_rasp_rank"
                 # Quit if we are told to
                 if self.end.is_set():
                     return
