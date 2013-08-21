@@ -232,12 +232,13 @@ class controller(threading.Thread):
                     self.redo = False
                     #continue
                 
-                if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP!
+                if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP! #TASK!
                     if not self.save_samples():
                         print("Samples failed; redoing test")
                         continue
                 elif self.run_info['profile'] in ('rasp_rank'):
-                    pass
+                    if not self.save_samples():
+                        print("Samples failed; redoing test")
             
                 # Successful test
                 self.save_results()
@@ -455,11 +456,8 @@ class controller(threading.Thread):
             if not result:
                 continue
             self.data.add_result(node.name, result)
-            if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP!
-                self.print_result(node, result)
-            elif self.run_info['profile'] in ('rasp_rank'): #TASK! run save result function here
-                self.print_result(node, result)
-                print "save_result riddler_controller result:",result #CHANGE!
+            self.print_result(node, result)
+            #print "save_result riddler_controller result:",result #CHANGE!
             
 
     # Save sample measurements received during the test
