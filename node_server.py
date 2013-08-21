@@ -113,11 +113,10 @@ class tcp_handler(SocketServer.BaseRequestHandler):
     def prepare_run(self, obj):
         print("# Prepare run")
         self.run_info = obj.run_info
-        print "after run_info, node:",self.run_info['profile']
+
         # Apply received configurations
         if not self.setup.apply_setup(obj.run_info):
             self.report(interface.node(interface.PREPARE_ERROR, error=self.setup.error))
-        print "after self.report node_server"
         # Inform the sampler about the new run
         #if not self.sampler.set_run_info(obj.run_info):
         #    print(self.sampler.error)
@@ -127,12 +126,8 @@ class tcp_handler(SocketServer.BaseRequestHandler):
         if self.tester_server:
             self.tester_server.kill()
         
-        print "after tester_server node_server, kill test"
         
         if self.run_info['role'] == "destination":
-            print "    I am a destination"
-            #print "arguments:",self.server.args
-            #print "run_info:", obj.run_info
             self.tester_server = tester.server(self, self.server.args, obj.run_info)
         
         # Wait for previous iperf clients to finish
@@ -145,7 +140,8 @@ class tcp_handler(SocketServer.BaseRequestHandler):
         for node in obj.dests:
             client = tester.client(self, node, obj.run_info, self.server.args)
             self.tester_clients.append(client)
-            break
+            if self.run_info['profile'] in ('rasp_rank'):
+                break
 
         # Report back to controller that we are ready
         time.sleep(1)
@@ -160,7 +156,6 @@ class tcp_handler(SocketServer.BaseRequestHandler):
             self.send_sample()
         elif self.run_info['profile'] in ('rasp_rank'):
             pass
-            #print "   Avoiding send sample"
 
         for client in self.tester_clients:
             client.start()

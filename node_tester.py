@@ -73,7 +73,6 @@ class client(threading.Thread):
         
         m = "--max_tx=" + "500" #FIX!
         h = "--host=10.0.0.255"# + str(self.dest_node['host'])#"10.0.0.255"
-        print "rasp_client node_tester host:", h #CHANGE!
         f = "--field=" + str(self.run_info['field'])
         i = "--iteration=" + str(self.run_info['test_num'])
         s = "--symbols=" + str(self.run_info['gen_size'])
@@ -159,8 +158,6 @@ class server(threading.Thread):
         #print "meshport server:", self.args.mesh_port
         #print "port server:",self.args.port
         
-        #m = "--max_tx=" + "500" #FIX!
-        #h = "--host=''"
         f = "--field=" + str(self.run_info['field'])
         i = "--iteration=" + str(self.run_info['test_num'])
         s = "--symbols=" + str(self.run_info['gen_size']) #FIX!
@@ -191,9 +188,9 @@ class server(threading.Thread):
             obj = interface.node(interface.RUN_ERROR, error="no server result")
             self.controller.report(obj)
             return
-        print "stdout:", stdout
+        
         result = eval(stdout)
-        print "result:", result
+
         if result:
             obj = interface.node(interface.RUN_RESULT, result=result)
             self.controller.report(obj)
