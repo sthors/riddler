@@ -72,7 +72,7 @@ class client(threading.Thread):
         #print "port:",self.args.port
         
         m = "--max_tx=" + "500" #FIX!
-        h = "--host=" + str(self.dest_node['host'])#"10.0.0.255"
+        h = "--host=10.0.0.255"# + str(self.dest_node['host'])#"10.0.0.255"
         print "rasp_client node_tester host:", h #CHANGE!
         f = "--field=" + str(self.run_info['field'])
         i = "--iteration=" + str(self.run_info['test_num'])

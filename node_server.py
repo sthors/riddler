@@ -145,6 +145,7 @@ class tcp_handler(SocketServer.BaseRequestHandler):
         for node in obj.dests:
             client = tester.client(self, node, obj.run_info, self.server.args)
             self.tester_clients.append(client)
+            break
 
         # Report back to controller that we are ready
         time.sleep(1)
