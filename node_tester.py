@@ -170,7 +170,7 @@ class server(threading.Thread):
         t = "--type=" + 'dest'
         d = "--format=" + "python"
         
-        self.cmd = [p, h, f, i, s, l, r, g, t, d]
+        self.cmd = [p, f, i, s, l, r, g, t, d]
         print self.cmd
         
         print("  Starting server: {}".format(self.cmd))
