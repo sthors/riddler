@@ -10,9 +10,9 @@ bob = node.node("bob", "panda6.personal.es.aau.dk")
 """
 #alice = node.node("source", "localhost")
 #bob = node.node("destination", "localhost", 8898)
-alice = node.node("source", "rasp01.lab.es.aau.dk")
-bob = node.node("destination", "rasp02.lab.es.aau.dk")
-catja = node.node("destination", "rasp00.lab.es.aau.dk")
+alice = node.node("source", "rasp03.lab.es.aau.dk")
+bob = node.node("destination", "rasp04.lab.es.aau.dk")
+catja = node.node("destination", "rasp05.lab.es.aau.dk")
 """
 alice = node.node("alice", "panda5.personal.es.aau.dk")
 relay = node.node("relay", "panda6.personal.es.aau.dk")
