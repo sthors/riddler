@@ -355,7 +355,7 @@ class controller(threading.Thread):
             self.codings = [True]
             self.rates = range(args.rate_start, args.rate_stop+1, args.rate_step)
             self.test_count = args.test_loops * len(self.codings)
-            self.result_format = "{:10s} {received_packets:6.1f} | {last_transmitted_seq_num:6.1f}"
+            self.result_format = "{:10s} Received packets: {received_packets:6.1f} | Last transmitted seq num{last_transmitted_seq_num:6.1f}"
             self.run_info_format = "\n# loop cnt:{loop:2d} | field: {field:10s}"
             self.fields = args.fields
         
@@ -393,14 +393,15 @@ class controller(threading.Thread):
         self.run_info['ack_timeout'] = kwarg.get('ack')
         self.run_info['req_timeout'] = kwarg.get('req')
         self.run_info['test_num'] = self.test_num
-        self.run_info['field'] = kwarg.get('field')
+        self.run_info['field'] = kwarg.get('field') #PASP! ADD syntax when comming from riddler_defaults.py
+        self.run_info['max_tx'] = self.args.max_tx #RASP! ADD! syntax when comming from parser
         
         # Update the data storage with the new run info
         self.data.add_run_info(self.run_info)
 
     # Reset counter if new loop is entered, increment otherwise
     def update_run_no(self, loop):
-        if not self.run_info or loop != self.run_info['loop']:
+        if not self.run_info or loop != self.run_info['loogp']:
             # We are in a new loop
             self.run_info['run_no'] = 0
         else:
@@ -450,7 +451,7 @@ class controller(threading.Thread):
     
     def save_results(self):
         for node in self.nodes:
-            print "node:", node #DEBUG!
+            #print "node:", node #DEBUG!
             result = node.get_result()
 
             # Some nodes don't measure results
@@ -474,7 +475,7 @@ class controller(threading.Thread):
         if total_time > 60*60:
             time_str = "{}h {:2}m".format(int(total_time/60/60), int((total_time/60)%60))
         else:
-            time_str = "{}m {:2}s".format(int(total_time/60), int(total_time%60))
+            time_str = "{}m {:2}s".format(int(total_t(RASPime/60), int(total_time%60))
         return time_str
 
     # Report the result to the user

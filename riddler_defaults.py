@@ -98,3 +98,4 @@ systematic = 1
 # Settings for raspberry
 #
 fields = ['binary']
+max_tx = 500

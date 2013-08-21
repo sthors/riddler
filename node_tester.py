@@ -71,7 +71,7 @@ class client(threading.Thread):
         #print "meshport:", self.args.mesh_port
         #print "port:",self.args.port
         
-        m = "--max_tx=" + "500" #FIX!
+        m = "--max_tx=" + str(self.run_info['max_tx']) #FIX!
         h = "--host=10.0.0.255"# + str(self.dest_node['host'])#"10.0.0.255"
         f = "--field=" + str(self.run_info['field'])
         i = "--iteration=" + str(self.run_info['test_num'])
@@ -84,7 +84,7 @@ class client(threading.Thread):
         p = os.path.dirname(self.args.rasp_udp_path) + self.args.program
         
         cmd = [p, h, f, i, s, l, r, g, t, m]
-        time.sleep(5)
+        time.sleep(1) #RASP!
         print cmd
         
         self.timer.start()
