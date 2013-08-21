@@ -237,9 +237,11 @@ class controller(threading.Thread):
                         print("Samples failed; redoing test")
                         continue
                 elif self.run_info['profile'] in ('rasp_rank'):
+                    pass
+                    """
                     if not self.save_samples():
                         print("Samples failed; redoing test")
-            
+                    """
                 # Successful test
                 self.save_results()
 
