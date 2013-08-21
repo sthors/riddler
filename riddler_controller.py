@@ -438,7 +438,6 @@ class controller(threading.Thread):
     # Tell the nodes to clean up and wait for them to report back
     def finish_run(self):
         for node in self.nodes:
-            print "node:", node #DEBUG!
             node.finish_run()
 
         for node in self.nodes:
@@ -449,6 +448,7 @@ class controller(threading.Thread):
     
     def save_results(self):
         for node in self.nodes:
+            print "node:", node #DEBUG!
             result = node.get_result()
 
             # Some nodes don't measure results
