@@ -103,6 +103,9 @@ def get_keypress():
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
     tty.setcbreak(sys.stdin.fileno())
-    ch = sys.stdin.read(1)
+    try:
+        ch = sys.stdin.read(1)
+    except KeyboardInterrupt:
+        ch = 'q'
     termios.tcsetattr(fd, termios.TCSANOW, old_settings)
     return ch

@@ -198,6 +198,7 @@ class controller(threading.Thread):
 
     # Control the state of each node and execute a single test run
     def execute_run(self):
+        print("# Executing run")
         while not self.end.is_set():
             # Make time stamp for use in ETA
             start = time.time()
@@ -217,13 +218,14 @@ class controller(threading.Thread):
 
             # Let the nodes clean up and save data
             self.finish_run()
-
+            print("# Waiting...")
             # Check if we should pause and rerun
             self.wait_pause()
-
+            print("#Waiting is done")
             # Decide on the next action
             if self.end.is_set():
                 # Quit
+                print("# Ending test")
                 return
 
             elif not self.error:
@@ -364,6 +366,7 @@ class controller(threading.Thread):
         
     # Configure the next run_info to be sent to each node
     def set_run_info(self,  **kwarg):
+        print("# Setting run info")
         self.update_run_no(kwarg.get('loop'))
         self.run_info['profile'] = self.args.test_profile
         self.run_info['test_time'] = self.args.test_time
@@ -413,6 +416,7 @@ class controller(threading.Thread):
 
     # Tell each node to prepare a new run and wait for them to become ready
     def prepare_run(self):
+        print("# Preparing run")
         # We start from a clean sheet
         self.error = False
 
@@ -426,6 +430,7 @@ class controller(threading.Thread):
         
     # Perform a run on each node
     def exec_node(self):
+        print("# Starting nodes")
         # Start it
         for node in self.nodes:
             node.start_run()
@@ -443,6 +448,7 @@ class controller(threading.Thread):
 
     # Tell the nodes to clean up and wait for them to report back
     def finish_run(self):
+        print("# Finnishing run")
         for node in self.nodes:
             node.finish_run()
 
@@ -453,6 +459,7 @@ class controller(threading.Thread):
 
     
     def save_results(self):
+        print("# Saving results")
         for node in self.nodes:
             #print "node:", node #DEBUG!
             result = node.get_result()
