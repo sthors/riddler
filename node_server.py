@@ -140,11 +140,11 @@ class tcp_handler(SocketServer.BaseRequestHandler):
         for node in obj.dests:
             client = tester.client(self, node, obj.run_info, self.server.args)
             self.tester_clients.append(client)
-            if self.run_info['profile'] in ('rasp_rank'):
+            if self.run_info['profile'] in ('rasp_rank'): #RASP!
                 break
 
         # Report back to controller that we are ready
-        time.sleep(1)
+        time.sleep(2)
         self.report(interface.node(interface.PREPARE_DONE))
         print("  Prepare done")
 
