@@ -152,9 +152,9 @@ class tcp_handler(SocketServer.BaseRequestHandler):
         print("# Start run")
         
         #print "profile:",self.run_info['profile']
-        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP! NEW_TEST!
+        if self.run_info and self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP! NEW_TEST!
             self.send_sample()
-        elif self.run_info['profile'] in ('rasp_rank'):
+        elif self.run_info and self.run_info['profile'] in ('rasp_rank'):
             pass
 
         for client in self.tester_clients:
@@ -163,9 +163,9 @@ class tcp_handler(SocketServer.BaseRequestHandler):
         # If no clients exists, we don't want the controller to
         # wait for us, so we send an empty result immediately.
         
-        if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'):
+        if self.run_info and self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'):
             self.send_dummy_result()
-        elif self.run_info['profile'] in ('rasp_rank'):
+        elif self.run_info and self.run_info['profile'] in ('rasp_rank'):
             self.rasp_send_dummy_result()
         
     def send_dummy_result(self): #RASP!
