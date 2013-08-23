@@ -19,7 +19,7 @@ class client(threading.Thread):
     def run(self):
         if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP! NEW_TEST!
             self.python_client()
-        elif self.run_info['profile'] in ('rasp_rank'):
+        elif self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'):
             self.rasp_client()
     
     def stop(self):
@@ -71,11 +71,11 @@ class client(threading.Thread):
         #print "meshport:", self.args.mesh_port
         #print "port:",self.args.port
         
-        m = "--max_tx=" + str(self.run_info['max_tx']) #FIX!
-        h = "--host=" + "10.0.0.255"#"str(self.args.mesh_host)#10.0.0.255" #RASP LOCAL_TEST!
+        m = "--max_tx=" + str(self.run_info['max_tx'])
+        h = "--host=" + "localhost"#"10.0.0.255" #RASP LOCAL_TEST!
         f = "--field=" + str(self.run_info['field'])
         i = "--iteration=" + str(self.run_info['test_num'])
-        s = "--symbols=" + str(self.run_info['gen_size'])
+        s = "--symbols=" + str(self.run_info['symbols'])
         l = "--symbol_size=" + str(self.run_info['packet_size'])
         r = "--rate=" + str(self.run_info['rate'])
         g = "--port=" + str(self.args.mesh_port)
@@ -84,7 +84,7 @@ class client(threading.Thread):
         p = os.path.dirname(self.args.rasp_udp_path) + self.args.program
         
         cmd = [p, h, f, i, s, l, r, g, t, m]
-        time.sleep(5) #RASP!
+        time.sleep(1) #RASP! #LOCAL_TEST!
         print cmd
         
         self.timer.start()
@@ -148,7 +148,7 @@ class server(threading.Thread):
     def run(self):
         if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP! NEW_TEST!
             self.python_server()
-        elif self.run_info['profile'] in ('rasp_rank'):
+        elif self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'):
             self.rasp_server()
             
     def rasp_server(self):
@@ -160,7 +160,7 @@ class server(threading.Thread):
         
         f = "--field=" + str(self.run_info['field'])
         i = "--iteration=" + str(self.run_info['test_num'])
-        s = "--symbols=" + str(self.run_info['gen_size']) #FIX!
+        s = "--symbols=" + str(self.run_info['symbols'])
         l = "--symbol_size=" + str(self.run_info['packet_size'])
         r = "--rate=" + str(self.run_info['rate'])
         g = "--port=" + str(self.args.mesh_port)

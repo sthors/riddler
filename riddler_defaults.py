@@ -6,6 +6,8 @@ data_file = "test.pickle"
 export_file = "test_socket"
 client_host = ""
 client_port = 6677
+filename = "test"
+plot_enable = 1
 
 #
 # Test settings
@@ -44,6 +46,13 @@ ratio_step  = 10    # Percentage
 hold_start = 10
 hold_stop = 20
 hold_step = 2
+
+#
+#Setting for symbols
+#
+symbols_start = 10
+symbols_stop = 100
+symbols_step = 10
 
 #
 # Settings for tcp_algos
@@ -94,7 +103,7 @@ fox_verbose = 3
 helper_threshold = 1
 systematic = 1
 
-#
+#RASP! ADD_ARG!
 # Settings for raspberry
 #
 fields = ['binary', 'binary8']

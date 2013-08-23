@@ -8,7 +8,7 @@ mhu = node.node("mhu", "localhost")
 alice = node.node("alice", "panda5.personal.es.aau.dk")
 bob = node.node("bob", "panda6.personal.es.aau.dk")
 """
-
+"""
 #alice = node.node("source", "localhost")
 #bob = node.node("destination", "localhost", 8898)
 alice = node.node("source", "rasp00.lab.es.aau.dk")
@@ -32,7 +32,7 @@ catja.add_source(alice)
 """
 #RASP! LOCAL_TEST!
 alice = node.node("source", "localhost")
-bob = node.node("destination", "localhost", 8898)
+bob = node.node("destination_1", "localhost", 8898)
 
 alice.add_dest(bob)
 #alice.add_dest(dan)
@@ -40,7 +40,6 @@ alice.add_dest(bob)
 #Add source to destinations
 #bob.add_source(alice)
 bob.add_source(alice)
-"""
 
 
 """

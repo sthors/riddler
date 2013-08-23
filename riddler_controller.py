@@ -1,6 +1,7 @@
 import time
 import threading
 import riddler_interface as interface
+import riddler_plot as plotter
 
 class controller(threading.Thread):
     def __init__(self, args):
@@ -83,7 +84,10 @@ class controller(threading.Thread):
             
         elif profile == "rasp_rank": #RASP!
 			self.test_rasp_rank()
-        #RASP! NEW_TEST!
+        
+        elif profile == "rasp_symbols_sweep":
+            self.test_rasp_symbols_sweep()
+        
         else:
             print("Profile '{0}' not supported.".format(profile))
             return
@@ -93,16 +97,39 @@ class controller(threading.Thread):
             total_time = time.time() - self.start_time
             print("Original ETA was {}".format(self.format_time(self.initial_eta)))
             print("Test completed in {}".format(self.format_time(total_time)))
+            
+            #TASK! Data processing
+            self.data.save_csv()
+            df = self.data.load_csv()
+            print self.args.plot_enable
+            if self.args.plot_enable:
+                plot = plotter.plot(["fun", "joy"], df)
+                plot.plot_rank()
+            else:
+                print("# Plotting is disabled")
+            
     
     #RASP! NEW_TEST!
     #Control fuinction to test rank on rasberry
+    def test_rasp_symbols_sweep(self):
+        for loop in self.loops:
+            for field in self.fields:
+                for symbols in self.symbols:
+                    rate = self.args.rlnc_rates[True]
+                    self.set_run_info(loop=loop, rate=rate, field=field, symbols=symbols)
+                    self.execute_run()
+                    # Quit if we are told to
+                    if self.end.is_set():
+                        return
+    
     def test_rasp_rank(self):
         for loop in self.loops:
             for field in self.fields:
                 #print "field:",field
                 #print "loop:", loop
                 rate = self.args.rlnc_rates[True]
-                self.set_run_info(loop=loop, rate=rate, field=field)
+                symbols = self.args.gen_size
+                self.set_run_info(loop=loop, rate=rate, field=field, symbols=symbols)
                 self.execute_run()
                 # Quit if we are told to
                 if self.end.is_set():
@@ -239,7 +266,7 @@ class controller(threading.Thread):
                     if not self.save_samples():
                         print("Samples failed; redoing test")
                         continue
-                elif self.run_info['profile'] in ('rasp_rank'):
+                elif self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'): #ADD_TEST!
                     pass
                     """
                     if not self.save_samples():
@@ -362,6 +389,15 @@ class controller(threading.Thread):
             self.result_format = "{:10s} Received packets: {received_packets:6.1f} | Last transmitted seq num: {last_transmitted_seq_num:6.1f}"
             self.run_info_format = "\n# loop cnt:{loop:2d} | field: {field:10s}"
             self.fields = args.fields
+            
+        if args.test_profile == 'rasp_symbols_sweep':
+            self.protocol = 'udp'
+            self.symbols = range(args.symbols_start, args.symbols_stop+1, args.symbols_step)
+            self.codings = [True]
+            self.test_count = args.test_loops * len(self.codings)
+            self.fields = args.fields
+            self.result_format = "{:10s} Received packets: {received_packets:6.1f} | Last transmitted seq num: {last_transmitted_seq_num:6.1f}"
+            self.run_info_format = "\n# loop cnt:{loop:2d} | field: {field:10s} | symbols: {symbols:3d}"
         #RASP! NEW_TEST!
         
     # Configure the next run_info to be sent to each node
@@ -400,7 +436,9 @@ class controller(threading.Thread):
         self.run_info['req_timeout'] = kwarg.get('req')
         self.run_info['test_num'] = self.test_num
         self.run_info['field'] = kwarg.get('field') #PASP! ADD syntax when comming from riddler_defaults.py
-        self.run_info['max_tx'] = self.args.max_tx #RASP! ADD! syntax when comming from parser
+        self.run_info['max_tx'] = self.args.max_tx #RASP! ADD_ARG! syntax when comming from parser
+        self.run_info['filename'] = self.args.filename
+        self.run_info['symbols'] = kwarg.get('symbols')
         
         # Update the data storage with the new run info
         self.data.add_run_info(self.run_info)
@@ -467,7 +505,7 @@ class controller(threading.Thread):
             # Some nodes don't measure results
             if not result:
                 continue
-            self.data.add_result(node.name, result)
+            self.data.add_result(node.name, result, self.run_info)
             self.print_result(node, result)
             #print "save_result riddler_controller result:",result #CHANGE!
             
