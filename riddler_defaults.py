@@ -7,7 +7,7 @@ export_file = "test_socket"
 client_host = ""
 client_port = 6677
 filename = "test"
-plot_enable = 1
+plot_enable = 0
 
 #
 # Test settings
@@ -108,3 +108,8 @@ systematic = 1
 #
 fields = ['binary', 'binary8']
 max_tx = 500
+
+#
+#Settings for plotting
+#
+plot_list = ['rank_plot']

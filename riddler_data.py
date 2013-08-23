@@ -130,7 +130,7 @@ class data_pandas:
         # Add result to latest run_data
         #d = self.rd[node][self.run_no][-1]
         #d.result = result
-        print "riddler_data add_result:", self.results
+        #print "riddler_data add_result:", self.results
         
     def save_csv(self):
         #csv_path = csv_path + ".csv"

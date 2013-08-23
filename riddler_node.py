@@ -225,7 +225,7 @@ class node(threading.Thread):
 
     # Set event to inform waiting callers
     def handle_prepare_done(self, obj):
-        print("prepare done from {}".format(self.name))
+        #print("prepare done from {}".format(self.name)) #DEBUG!
         self.run_error = False
         self.reply.set()
 
@@ -262,7 +262,7 @@ class node(threading.Thread):
 
     # Set event to inform waiting callers
     def handle_finish_done(self, obj):
-        print("finish done from {}".format(self.name))
+        #print("finish done from {}".format(self.name))
         self.store_samples = False
         self.reply.set()
 

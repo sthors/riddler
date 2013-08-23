@@ -4,8 +4,7 @@ import numpy as np
 import pandas as pd
 
 class plot:
-    def __init__(self, plot_types, data):
-        self.plot_types = plot_types
+    def __init__(self, data):
         self.df = data
 
     def plot_rank(self):
