@@ -111,11 +111,11 @@ class controller(threading.Thread):
                 print("# Plotting is disabled")
             
     
-    #RASP! NEW_TEST!
-    #Control fuinction to test rank on rasberry
+    #RASP! NEW_TEST! FOR_LOOPS!
+    #Control function to test rank on rasberry
     def test_rasp_symbols_sweep(self):
         for loop in self.loops:
-            for field in self.fields:
+            for field in self.fields: #FIELDS_EXAMPLE!
                 for symbols in self.symbols:
                     rate = self.args.rlnc_rates[True]
                     self.set_run_info(loop=loop, rate=rate, field=field, symbols=symbols)
@@ -397,10 +397,10 @@ class controller(threading.Thread):
             self.symbols = range(args.symbols_start, args.symbols_stop+1, args.symbols_step)
             self.codings = [True]
             self.test_count = args.test_loops * len(self.codings)
-            self.fields = args.fields
+            self.fields = args.fields #FIELDS_EXAMPLE!
             self.result_format = "{:10s} Received packets: {received_packets:6.1f} | Last transmitted seq num: {last_transmitted_seq_num:6.1f}"
             self.run_info_format = "\n# loop cnt:{loop:2d} | field: {field:10s} | symbols: {symbols:3d}"
-        #RASP! NEW_TEST!
+t        #RASP! NEW_TEST! TEST_SPECIFIC_SETUP!
         
     # Configure the next run_info to be sent to each node
     def set_run_info(self,  **kwarg):

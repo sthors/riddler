@@ -106,7 +106,7 @@ systematic = 1
 #RASP! ADD_ARG!
 # Settings for raspberry
 #
-fields = ['binary', 'binary8']
+fields = ['binary', 'binary8']  #FIELDS_EXAMPLE!
 max_tx = 500
 
 #
