@@ -103,7 +103,7 @@ class controller(threading.Thread):
             df = self.data.load_csv()
             if self.args.plot_enable:
                 plot = plotter.plot(df)
-                if "rank_plot" in self.args.plot_list:
+                if "rank_plot" in self.args.plot_list: #ADD_PLOT!
                     plot.plot_rank()
                 else:
                     print "Error no plots are chosen"

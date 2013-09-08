@@ -7,7 +7,7 @@ class plot:
     def __init__(self, data):
         self.df = data
 
-    def plot_rank(self):
+    def plot_rank(self): #ADD_PLOT_FUNTION!
             if not self.df:
                 return
             #print self.df
