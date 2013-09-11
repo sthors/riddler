@@ -55,7 +55,7 @@ class controller(threading.Thread):
             self.control()
         except KeyboardInterrupt:
             return
-	
+    
     def control(self):
         #print("   controller   ")  #DEBUG!
         self.start_time = time.time()
@@ -83,7 +83,7 @@ class controller(threading.Thread):
             self.test_rlnc()
             
         elif profile == "rasp_rank": #RASP!
-			self.test_rasp_rank()
+            self.test_rasp_rank()
         
         elif profile == "rasp_symbols_sweep":
             self.test_rasp_symbols_sweep()
@@ -400,7 +400,7 @@ class controller(threading.Thread):
             self.fields = args.fields #FIELDS_EXAMPLE!
             self.result_format = "{:10s} Received packets: {received_packets:6.1f} | Last transmitted seq num: {last_transmitted_seq_num:6.1f}"
             self.run_info_format = "\n# loop cnt:{loop:2d} | field: {field:10s} | symbols: {symbols:3d}"
-t        #RASP! NEW_TEST! TEST_SPECIFIC_SETUP!
+            #RASP! NEW_TEST! TEST_SPECIFIC_SETUP!
         
     # Configure the next run_info to be sent to each node
     def set_run_info(self,  **kwarg):
