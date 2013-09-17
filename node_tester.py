@@ -93,6 +93,7 @@ class client(threading.Thread):
         self.running = True
         self.p.wait()
         self.running = False
+        print "# rasp_client end" #DEBUG!
         
         
     

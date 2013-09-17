@@ -247,10 +247,10 @@ class controller(threading.Thread):
 
             # Let the nodes clean up and save data
             self.finish_run()
-            #print("# Waiting...") #DEBUG!
+            print("# Waiting...") #DEBUG!
             # Check if we should pause and rerun
             self.wait_pause()
-            #print("#Waiting is done") #DEBUG!
+            print("#Waiting is done") #DEBUG!
             # Decide on the next action
             if self.end.is_set():
                 # Quit
