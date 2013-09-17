@@ -73,6 +73,7 @@ class client(threading.Thread):
         
         m = "--max_tx=" + str(self.run_info['max_tx'])
         h = "--host=" + "10.0.0.255" #"localhost" #RASP LOCAL_TEST!
+        #h = "--host=" + "localhost" #RASP LOCAL_TEST!
         f = "--field=" + str(self.run_info['field'])
         i = "--iteration=" + str(self.run_info['test_num'])
         s = "--symbols=" + str(self.run_info['symbols'])
@@ -164,7 +165,7 @@ class server(threading.Thread):
         l = "--symbol_size=" + str(self.run_info['packet_size'])
         r = "--rate=" + str(self.run_info['rate'])
         g = "--port=" + str(self.args.mesh_port)
-        t = "--type=" + 'dest'
+        t = "--type=" + 'destination'
         d = "--format=" + "python"
         
         self.cmd = [p, f, i, s, l, r, g, t, d]
