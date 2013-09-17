@@ -72,7 +72,7 @@ class client(threading.Thread):
         #print "port:",self.args.port
         
         m = "--max_tx=" + str(self.run_info['max_tx'])
-        h = "--host=" + "localhost"#"10.0.0.255" #RASP LOCAL_TEST!
+        h = "--host=" + "10.0.0.255" #"localhost" #RASP LOCAL_TEST!
         f = "--field=" + str(self.run_info['field'])
         i = "--iteration=" + str(self.run_info['test_num'])
         s = "--symbols=" + str(self.run_info['symbols'])
