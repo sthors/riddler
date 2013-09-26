@@ -218,7 +218,7 @@ class tcp_handler(SocketServer.BaseRequestHandler):
             self.report(err)
             return
         
-        print(# Stop client)    
+        print('# Stop client')    
         for client in self.tester_clients:
             client.stop() #INTEREST!
 
