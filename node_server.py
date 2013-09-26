@@ -8,6 +8,7 @@ import node_tester as tester
 import node_setup as setup
 import subprocess
 import os.path
+report_sleep = 1.5
 
 class server:
     def __init__(self, args):
@@ -174,11 +175,11 @@ class tcp_handler(SocketServer.BaseRequestHandler):
         try:
             if self.run_info['role'] == 'helper':
                 #print("  Sending dummy result")
-                time.sleep(1)
+                time.sleep(report_sleep)
                 obj = interface.node(interface.RUN_RESULT, result=None)
                 self.report(obj)
         except AttributeError as e:
-            time.sleep(1)
+            time.sleep(report_sleep)
             obj = interface.node(interface.RUN_ERROR, error=e)
             self.report(obj)
             print("  Run error: " + e)
@@ -189,11 +190,11 @@ class tcp_handler(SocketServer.BaseRequestHandler):
         try:
             if self.run_info['role'] == 'source':
                 #print("  Sending dummy result (raspberry)")
-                time.sleep(1)
+                time.sleep(report_sleep)
                 obj = interface.node(interface.RUN_RESULT, result=None)
                 self.report(obj)
         except AttributeError as e:
-            time.sleep(1)
+            time.sleep(report_sleep)
             obj = interface.node(interface.RUN_ERROR, error=e)
             self.report(obj)
             print("  Run error: " + e)
@@ -223,7 +224,7 @@ class tcp_handler(SocketServer.BaseRequestHandler):
             client.stop() #INTEREST!
 
         # Report back to controller that we are done
-        time.sleep(1)
+        time.sleep(report_sleep)
         self.report(interface.node(interface.FINISH_DONE))
         print("# Finish done")
 
