@@ -1,5 +1,5 @@
 import threading
-import SocketServer
+import SocketServer #ThreadedTCPServer
 import riddler_interface as interface
 import socket
 
@@ -19,7 +19,7 @@ class client(threading.Thread):
         self.server.clients = []
         self.server.nodes = []
         self.server.riddler = None
-        self.start()
+        self.start() #Starts thread
 
     # Stop the TCP server
     def stop(self):

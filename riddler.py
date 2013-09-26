@@ -165,7 +165,7 @@ class riddler:
     # Load the nodes configuration and distribute node references
     def load_nodes(self):
         try:
-            c = __import__(self.args.nodes_file)
+            c = __import__(self.args.nodes_file) #imports data from nodes file
             self.nodes = c.node.nodes
         except ImportError:
             print("Unable to load nodes file: {0}".format(self.args.nodes_file))

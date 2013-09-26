@@ -132,15 +132,15 @@ class tcp_handler(SocketServer.BaseRequestHandler):
         
         # Wait for previous iperf clients to finish
         for client in self.tester_clients:
-            print("  Waiting for clients")
-            client.stop()
+            print("#  Waiting for clients")
+            client.stop()#INTEREST!
 
         # Prepare new iperf client threads
         self.tester_clients = []
         for node in obj.dests:
             client = tester.client(self, node, obj.run_info, self.server.args)
             self.tester_clients.append(client)
-            if self.run_info['profile'] in ('rasp_rank'): #RASP!
+            if self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'): #RASP! #ADD_TEST! #NEW_TEST!
                 break
 
         # Report back to controller that we are ready
@@ -156,7 +156,8 @@ class tcp_handler(SocketServer.BaseRequestHandler):
             self.send_sample()
         elif self.run_info and self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'):
             pass
-
+        
+        print('# Start clients') #DEBUG!
         for client in self.tester_clients:
             client.start()
         
@@ -166,6 +167,7 @@ class tcp_handler(SocketServer.BaseRequestHandler):
         if self.run_info and self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'):
             self.send_dummy_result()
         elif self.run_info and self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'): #ADD_TEST!
+            print('# Sending dummy result')
             self.rasp_send_dummy_result()
         
     def send_dummy_result(self): #RASP!
@@ -215,14 +217,15 @@ class tcp_handler(SocketServer.BaseRequestHandler):
             err = interface.node(interface.RUN_ERROR, error="fox failed")
             self.report(err)
             return
-            
+        
+        print(# Stop client)    
         for client in self.tester_clients:
-            client.stop()
+            client.stop() #INTEREST!
 
         # Report back to controller that we are done
         time.sleep(1)
         self.report(interface.node(interface.FINISH_DONE))
-        print("  Finish done")
+        print("# Finish done")
 
     # Thread safe sender function
     def report(self, obj):
