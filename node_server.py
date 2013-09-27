@@ -168,7 +168,6 @@ class tcp_handler(SocketServer.BaseRequestHandler):
         if self.run_info and self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'):
             self.send_dummy_result()
         elif self.run_info and self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'): #ADD_TEST!
-            print('# Sending dummy result')
             self.rasp_send_dummy_result()
         
     def send_dummy_result(self): #RASP!
@@ -189,7 +188,7 @@ class tcp_handler(SocketServer.BaseRequestHandler):
     def rasp_send_dummy_result(self):
         try:
             if self.run_info['role'] == 'source':
-                #print("  Sending dummy result (raspberry)")
+                print('# Sending dummy result') #DEBUG!
                 time.sleep(report_sleep)
                 obj = interface.node(interface.RUN_RESULT, result=None)
                 self.report(obj)
