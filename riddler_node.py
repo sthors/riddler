@@ -139,8 +139,8 @@ class node(threading.Thread):
             self.handle_prepare_error(obj)
 
         elif obj.cmd is interface.RUN_RESULT:
-            print("# Result is received")
             self.handle_run_result(obj)
+            print("# Result is received")
 
         elif obj.cmd is interface.RUN_ERROR:
             self.handle_run_error(obj)

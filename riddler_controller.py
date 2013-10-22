@@ -233,8 +233,9 @@ class controller(threading.Thread):
             start = time.time()
 
             # Check if we should pause and rerun
+            print("waiting.. one") #DEBUG!
             self.wait_pause()
-
+            print("wait over") #DEBUG!
             self.prepare_run()
             self.test_num += 1
 
