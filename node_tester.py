@@ -135,7 +135,7 @@ class client(threading.Thread):
         self.controller.report(obj)
 
 
-class server(threading.Thread):
+class server(threading.Thread): #a thread is greated to all destinations
     def __init__(self, controller, args, run_info):
         super(server, self).__init__(None)
         self.controller = controller
@@ -196,6 +196,7 @@ class server(threading.Thread):
         if result:
             obj = interface.node(interface.RUN_RESULT, result=result)
             self.controller.report(obj)
+            print("Result is send ")
         else:
             obj = interface.node(interface.RUN_ERROR, error="empty server result")
             self.controller.report(obj)

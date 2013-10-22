@@ -28,7 +28,7 @@ class setup:
 	
     # Call the different setup functions
     def apply_setup(self, run_info):
-        if not 'rasp' in run_info["profile"]:
+        if not 'rasp' in run_info["profile"]: #RASP!
             if not self.setup_batman(run_info):
                 return False
 

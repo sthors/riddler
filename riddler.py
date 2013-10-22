@@ -166,7 +166,7 @@ class riddler:
     def load_nodes(self):
         try:
             c = __import__(self.args.nodes_file) #imports data from nodes file
-            self.nodes = c.node.nodes
+            self.nodes = c.node.nodes #Nodes are saved in class
         except ImportError:
             print("Unable to load nodes file: {0}".format(self.args.nodes_file))
             return False

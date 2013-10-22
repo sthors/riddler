@@ -15,19 +15,19 @@ class server:
         self.args = args
 
     def create(self):
-        self.server = SocketServer.TCPServer((self.args.host, self.args.port), tcp_handler, bind_and_activate=False)
+        self.server = SocketServer.TCPServer((self.args.host, self.args.port), tcp_handler, bind_and_activate=False) #make a server
         self.server.allow_reuse_address = True
         self.server.timeout = 1
         self.server.running = True
         self.server.args = self.args
-        self.server.server_bind()
-        self.server.server_activate()
+        self.server.server_bind() #binds to desired address
+        self.server.server_activate() #starting server and listen
 
     def serve(self):
-        print("# Waiting for controller connection")
+        print("# Waiting for controller connection") #The first line printed out
         while self.server.running:
             try:
-                self.server.handle_request()
+                self.server.handle_request() #handles the requests
             except socket.error as e:
                 print(e)
                 continue
@@ -39,10 +39,10 @@ class server:
         if self.server:
             self.server.running = False
 
-class tcp_handler(SocketServer.BaseRequestHandler):
+class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with BaseRequestHandler as subclass
     # Prepare objects upon a new connection
     def setup(self):
-        print("  Connected to controller: {}".format(self.client_address))
+        print("  Connected to controller: {}".format(self.client_address)) #when the connection is made
         self.end = threading.Event()
         self.tester_clients = []
         self.tester_server = None
@@ -85,13 +85,13 @@ class tcp_handler(SocketServer.BaseRequestHandler):
         print("  Closing connection")
 
     # Read data from controller
-    def handle(self):
+    def handle(self): #This overrides the handle method
         while not self.end.is_set():
             try:
                 obj = interface.recv(self.request)
                 if not obj:
                     break
-                self.handle_cmd(obj)
+                self.handle_cmd(obj) #handles the command send to the server
             except socket.error as e:
                 print("Connection to controller lost: {0}".format(e))
                 break
@@ -100,12 +100,12 @@ class tcp_handler(SocketServer.BaseRequestHandler):
                 break
 
     # Handle commands/data from controller
-    def handle_cmd(self, obj):
-        if obj.cmd is interface.PREPARE_RUN:
+    def handle_cmd(self, obj): #Three commands during a test
+        if obj.cmd is interface.PREPARE_RUN: #prepares the run
             self.prepare_run(obj)
-        elif obj.cmd is interface.START_RUN:
+        elif obj.cmd is interface.START_RUN: #starts the run
             self.start_run(obj)
-        elif obj.cmd is interface.FINISH_RUN:
+        elif obj.cmd is interface.FINISH_RUN: #finishes the run
             self.finish_run(obj)
         else:
             print("Received unknown command: {0}".format(obj.cmd))
@@ -113,27 +113,27 @@ class tcp_handler(SocketServer.BaseRequestHandler):
     # Prepare this node for a new test run
     def prepare_run(self, obj):
         print("# Prepare run")
-        self.run_info = obj.run_info
+        self.run_info = obj.run_info #run info sendt from riddler controller
 
         # Apply received configurations
         if not self.setup.apply_setup(obj.run_info):
-            self.report(interface.node(interface.PREPARE_ERROR, error=self.setup.error))
+            self.report(interface.node(interface.PREPARE_ERROR, error=self.setup.error)) # Had a setup error
         # Inform the sampler about the new run
         #if not self.sampler.set_run_info(obj.run_info):
         #    print(self.sampler.error)
         #    self.report(interface.node(interface.PREPARE_ERROR, error=self.sampler.error))
 
         # (Re)start iperf server
-        if self.tester_server:
+        if self.tester_server: #Kills any remaining tester servers
             self.tester_server.kill()
         
         
-        if self.run_info['role'] == "destination":
+        if self.run_info['role'] == "destination": #if the node is a destination
             self.tester_server = tester.server(self, self.server.args, obj.run_info)
         
         # Wait for previous iperf clients to finish
         for client in self.tester_clients:
-            print("#  Waiting for clients")
+            print("#  Waiting for clients to finish")
             client.stop()#INTEREST!
 
         # Prepare new iperf client threads
@@ -141,12 +141,12 @@ class tcp_handler(SocketServer.BaseRequestHandler):
         for node in obj.dests:
             client = tester.client(self, node, obj.run_info, self.server.args)
             self.tester_clients.append(client)
-            if self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'): #RASP! #ADD_TEST! #NEW_TEST!
+            if self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'): #RASP! #ADD_TEST! #NEW_TEST! #only one source is needed
                 break
 
         # Report back to controller that we are ready
-        time.sleep(2)
-        self.report(interface.node(interface.PREPARE_DONE))
+        time.sleep(3)
+        self.report(interface.node(interface.PREPARE_DONE)) #reporting to the controller that the node is ready
         print("  Prepare done")
 
     def start_run(self, obj):

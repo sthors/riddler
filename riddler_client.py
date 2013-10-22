@@ -63,7 +63,8 @@ class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 
 class tcp_handler(SocketServer.BaseRequestHandler):
     # Prepare the class for a new connection
-    def setup(self):
+    def setup(self): #Called before the handle call to prapare
+        print("# tcp_handler setup")
         self.end = threading.Event()
         self.lock = threading.Lock()
         self.server.clients.append(self)
@@ -72,7 +73,7 @@ class tcp_handler(SocketServer.BaseRequestHandler):
         self.export_nodes(self.server.nodes)
 
     # Remove self from the list of connected clients on closed connection
-    def finish(self):
+    def finish(self): #called after the handle
         self.server.clients.remove(self)
         self.request.close()
 

@@ -27,12 +27,12 @@ args = parser.parse_args()
 
 class node:
     def __init__(self):
-        self.server = server.server(args)
-        self.server.create()
-        self.server.serve()
+        self.server = server.server(args) #Creating a new object of server
+        self.server.create() #creates server for node
+        self.server.serve() #makes the server do, what it does best. Serve!
 
 if __name__ == "__main__":
     try:
-        n = node()
+        n = node() #Creating a new object of node
     except KeyboardInterrupt:
         print("Quit")
