@@ -107,6 +107,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
             self.start_run(obj)
         elif obj.cmd is interface.FINISH_RUN: #finishes the run
             self.finish_run(obj)
+            print("# Finished run")
         else:
             print("Received unknown command: {0}".format(obj.cmd))
 

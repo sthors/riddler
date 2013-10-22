@@ -11,20 +11,20 @@ bob = node.node("bob", "panda6.personal.es.aau.dk")
 
 #alice = node.node("source", "localhost")
 #bob = node.node("destination", "localhost", 8898)
-alice = node.node("source", "rasp01.lab.es.aau.dk")
-bob = node.node("destination", "rasp02.lab.es.aau.dk")
-catja = node.node("destination", "rasp03.lab.es.aau.dk")
+alice = node.node("source", "rasp07.lab.es.aau.dk")
+bob = node.node("destination", "rasp09.lab.es.aau.dk")
+#catja = node.node("destination", "rasp09.lab.es.aau.dk")
 #dan = node.node("destination", "rasp04.lab.es.aau.dk")
 
 
-#Add destinations to source
+#Add destinations to sourcerasp09
 alice.add_dest(bob) #Alice client bob server
-alice.add_dest(catja)
+#alice.add_dest(catja)
 #alice.add_dest(dan)
 
 #Add source to destinations
 bob.add_source(alice)
-catja.add_source(alice)
+#catja.add_source(alice)
 #dan.add_source(alice)
 
 #bob.add_dest(alice)
