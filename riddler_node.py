@@ -186,7 +186,7 @@ class node(threading.Thread):
     # Wait for node to answer last command
     def wait(self):
         while not self.end.is_set():
-            if self.reply.wait(.1):
+            if self.reply.wait(.2): #DEBUG_HYPO!
                 break
         if self.run_error:
             print("Wait error from {}".format(self.name))

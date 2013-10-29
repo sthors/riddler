@@ -318,7 +318,7 @@ class controller(threading.Thread):
         self.recover()
 
     # Called by user or timer to recover
-    def recover(self):
+    def recover(self): #TASK! write to a debug file
         # Invalidate the current run
         print("Error from recover")
         self.error = True
