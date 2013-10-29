@@ -12,7 +12,7 @@ mesh_port = 8866
 power_dev = '/dev/ttyUSB0'
 fox_path = '/root/rlncd/build/src/source'
 udp_path = '/root/fox/tools/'
-rasp_udp_path = "/home/pi/ap/"
+rasp_udp_path = "/home/pi/riddler/programs"
 program = '/nc4rasp'
 
 """
