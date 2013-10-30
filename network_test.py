@@ -11,8 +11,8 @@ bob = node.node("bob", "panda6.personal.es.aau.dk")
 
 #alice = node.node("source", "localhost")
 #bob = node.node("destination", "localhost", 8898)
-alice = node.node("source", "rasp07.lab.es.aau.dk")
-bob = node.node("destination", "rasp09.lab.es.aau.dk")
+alice = node.node("source", "rasp00.lab.es.aau.dk")
+bob = node.node("destination", "rasp03.lab.es.aau.dk")
 #catja = node.node("destination", "rasp09.lab.es.aau.dk")
 #dan = node.node("destination", "rasp04.lab.es.aau.dk")
 
