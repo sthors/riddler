@@ -93,7 +93,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
                     break
                 print obj
                 self.handle_cmd(obj) #handles the command send to the server
-                print ("# Handle_cmd end") #DEBUG!
+                #print ("# Handle_cmd end") #DEBUG!
             except socket.error as e:
                 print("Connection to controller lost: {0}".format(e))
                 break

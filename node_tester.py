@@ -125,7 +125,7 @@ class client(threading.Thread):
     def report_result(self, result):
         obj = interface.node(interface.RUN_RESULT, result=result)
         self.controller.report(obj)
-        print("report  RUN_RESULT")
+        print("# report  RUN_RESULT")
 
     # Send back an error to the controller
     def report_error(self, error):
