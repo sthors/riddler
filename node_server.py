@@ -8,7 +8,7 @@ import node_tester as tester
 import node_setup as setup
 import subprocess
 import os.path
-report_sleep = 1.5
+report_sleep = 1
 
 class server:
     def __init__(self, args):
