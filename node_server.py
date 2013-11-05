@@ -151,7 +151,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
         # Report back to controller that we are ready
         time.sleep(3)
         self.report(interface.node(interface.PREPARE_DONE)) #reporting to the controller that the node is ready
-        print("  Prepare done")
+        print("# report  PREPARE_DONE") #DEBUG!
 
     def start_run(self, obj):
         print("# Start run")
@@ -196,6 +196,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
                 time.sleep(report_sleep)
                 obj = interface.node(interface.RUN_RESULT, result=None)
                 self.report(obj)
+                print("# report RUN_RESULT") #DEBUG!
         except AttributeError as e:
             time.sleep(report_sleep)
             obj = interface.node(interface.RUN_ERROR, error=e)
@@ -229,7 +230,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
         # Report back to controller that we are done
         time.sleep(report_sleep)
         self.report(interface.node(interface.FINISH_DONE))
-        print("# Finish done")
+        print("# report FINISH_DONE")
 
     # Thread safe sender function
     def report(self, obj):
@@ -249,6 +250,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
             mac = None
         obj = interface.node(interface.NODE_INFO, mesh_host=args.mesh_host, mesh_port=args.mesh_port, mesh_mac=mac)
         self.report(obj)
+        print(# report NODE_INFO)
 
     def send_sample(self, finish=False):
         try:
