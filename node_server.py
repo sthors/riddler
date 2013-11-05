@@ -250,7 +250,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
             mac = None
         obj = interface.node(interface.NODE_INFO, mesh_host=args.mesh_host, mesh_port=args.mesh_port, mesh_mac=mac)
         self.report(obj)
-        print(# report NODE_INFO)
+        print("# report NODE_INFO")
 
     def send_sample(self, finish=False):
         try:
