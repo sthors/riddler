@@ -85,7 +85,7 @@ class client(threading.Thread):
         p = os.path.dirname(self.args.rasp_udp_path) + self.args.program
         
         cmd = [p, h, f, i, s, l, r, g, t, m]
-        time.sleep(1) #RASP! #LOCAL_TEST!
+        time.sleep(3) #RASP! #LOCAL_TEST!
         print cmd
         
         self.timer.start()
