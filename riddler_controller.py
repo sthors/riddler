@@ -135,7 +135,9 @@ class controller(threading.Thread):
                 self.execute_run()
                 # Quit if we are told to
                 if self.end.is_set():
+                    print ("returning from test_rasp_rank")
                     return
+        print ("# End of rasp_rank_test")
     
     # Control function to swipe UDP rates
     def test_rates(self):
@@ -253,7 +255,7 @@ class controller(threading.Thread):
             self.wait_pause()
             print("#Waiting is done") #DEBUG!
             # Decide on the next action
-            if self.end.is_set():
+            if self.end.is_set(): #DEBUG_HYPO!
                 # Quit
                 print("# Ending test")
                 return
@@ -292,6 +294,7 @@ class controller(threading.Thread):
     def wait_pause(self):
         # Check the user setting
         if self.pause.is_set():
+            print("# pause is set") #DEBUG!
             # Nope, we don't pause
             return False
 

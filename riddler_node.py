@@ -131,28 +131,33 @@ class node(threading.Thread):
     def handle(self, obj):
         if obj.cmd is interface.NODE_INFO:
             self.handle_node_info(obj)
-
+            print("# NODE_INFO")
+            
         elif obj.cmd is interface.PREPARE_DONE:
             self.handle_prepare_done(obj)
-
+            print("# PREPARE DONE")
         elif obj.cmd is interface.PREPARE_ERROR:
             self.handle_prepare_error(obj)
-
+            print("# PREPARE_ERROR")
         elif obj.cmd is interface.RUN_RESULT:
             self.handle_run_result(obj)
             print("# Result is received")
 
         elif obj.cmd is interface.RUN_ERROR:
             self.handle_run_error(obj)
+            print("# RUN_ERROR")
 
         elif obj.cmd is interface.FINISH_DONE:
             self.handle_finish_done(obj)
+            print("# FINISH_DONE")
 
         elif obj.cmd is interface.SAMPLE:
             self.handle_sample(obj)
+            print("# SAMPLE")
 
         elif obj.cmd is interface.SAMPLE_ERROR:
             self.handle_sample_error(obj)
+            print("# SAMPLE_ERROR")
 
         else:
             print("Received unknown command from {0}: {1}".format(self.name, obj.cmd))
@@ -186,7 +191,7 @@ class node(threading.Thread):
     # Wait for node to answer last command
     def wait(self):
         while not self.end.is_set():
-            if self.reply.wait(0.5): #DEBUG_HYPO!
+            if self.reply.wait(1): #DEBUG_HYPO!
                 break
         if self.run_error:
             print("Wait error from {}".format(self.name))
