@@ -91,7 +91,6 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
                 obj = interface.recv(self.request)
                 if not obj:
                     break
-                print obj
                 self.handle_cmd(obj) #handles the command send to the server
                 #print ("# Handle_cmd end") #DEBUG!
             except socket.error as e:
@@ -230,7 +229,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
         # Report back to controller that we are done
         time.sleep(report_sleep)
         self.report(interface.node(interface.FINISH_DONE))
-        print("# report FINISH_DONE")
+        print("# report FINISH_DONE")#DEBUG!
 
     # Thread safe sender function
     def report(self, obj):
@@ -238,6 +237,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
         ret = interface.send(self.request, obj)
         self.lock.release()
         if not ret:
+            print("# report error") #DEBUG!
             self.end.set()
         return ret
 

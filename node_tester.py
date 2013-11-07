@@ -170,9 +170,8 @@ class server(threading.Thread): #a thread is greated to all destinations
         d = "--format=" + "python"
         
         self.cmd = [p, f, i, s, l, r, g, t, d]
-        print self.cmd
         
-        print("  Starting server: {}".format(self.cmd))
+        print("  Starting server: {}".format(self.cmd)) #DEBUG!
 
         self.p = subprocess.Popen(self.cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
         self.running = True
@@ -196,7 +195,7 @@ class server(threading.Thread): #a thread is greated to all destinations
         if result:
             obj = interface.node(interface.RUN_RESULT, result=result)
             self.controller.report(obj)
-            print("Result is send ")
+            print("# Result is send ")
         else:
             obj = interface.node(interface.RUN_ERROR, error="empty server result")
             self.controller.report(obj)
