@@ -14,12 +14,13 @@ class client(threading.Thread):
         self.args = args
         self.running = False
         self.ping_p = None
-        self.timer = threading.Timer(run_info['test_time']*2, self.kill_client)
+        self.timer = threading.Timer(run_info['test_time']*2, self.kill_client) #TIME!
     
-    def run(self):
+    def run(self): #
         if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP! NEW_TEST!
             self.python_client()
         elif self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'):
+            print("# Running client") #DEBUG!
             self.rasp_client()
     
     def stop(self):
@@ -71,22 +72,30 @@ class client(threading.Thread):
         #print "meshport:", self.args.mesh_port
         #print "port:",self.args.port
         
-        m = "--max_tx=" + str(self.run_info['max_tx'])
-        h = "--host=" + "10.0.0.255" #"localhost" #RASP LOCAL_TEST!
-        #h = "--host=" + "localhost" #RASP LOCAL_TEST!
-        f = "--field=" + str(self.run_info['field'])
-        i = "--iteration=" + str(self.run_info['test_num'])
-        s = "--symbols=" + str(self.run_info['symbols'])
-        l = "--symbol_size=" + str(self.run_info['packet_size'])
-        r = "--rate=" + str(self.run_info['rate'])
-        g = "--port=" + str(self.args.mesh_port)
-        t = "--type=" + 'source'
+        if self.args.program == '/nc4rasp':
+            m = "--max_tx=" + str(self.run_info['max_tx'])
+            h = "--host=" + "10.0.0.255" #"localhost" #RASP LOCAL_TEST!
+            #h = "--host=" + "localhost" #RASP
+            f = "--field=" + str(self.run_info['field'])
+            i = "--iteration=" + str(self.run_info['test_num'])
+            s = "--symbols=" + str(self.run_info['symbols'])
+            l = "--symbol_size=" + str(self.run_info['packet_size'])
+            r = "--rate=" + str(self.run_info['rate'])
+            g = "--port=" + str(self.args.mesh_port)
+            t = "--type=" + 'source'
+            
+            p = os.path.dirname(self.args.rasp_udp_path) + self.args.program
+            
+            cmd = [p, h, f, i, s, l, r, g, t, m]
+            time.sleep(3) #RASP! #LOCAL_TEST! #TIME!
+            print cmd
+            
+        elif self.args.program == '/task':
+            pass
+            #TASK! Hanas program
         
-        p = os.path.dirname(self.args.rasp_udp_path) + self.args.program
-        
-        cmd = [p, h, f, i, s, l, r, g, t, m]
-        time.sleep(3) #RASP! #LOCAL_TEST!
-        print cmd
+        else:
+            print('Error: The chosen cpp program do not exist')
         
         self.timer.start()
         self.p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
@@ -151,6 +160,7 @@ class server(threading.Thread): #a thread is greated to all destinations
         if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP! NEW_TEST!
             self.python_server()
         elif self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'):
+            print("# Running server")
             self.rasp_server()
             
     def rasp_server(self):
@@ -175,7 +185,7 @@ class server(threading.Thread): #a thread is greated to all destinations
 
         self.p = subprocess.Popen(self.cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
         self.running = True
-        self.p.wait()
+        self.p.wait() #DEBUG_HYPO!
         self.running = False
         
         print("server done")
@@ -186,6 +196,7 @@ class server(threading.Thread): #a thread is greated to all destinations
             self.controller.report(obj)
             return
         elif not stdout:
+            print("Error: No result from destination")
             obj = interface.node(interface.RUN_ERROR, error="no server result")
             self.controller.report(obj)
             return

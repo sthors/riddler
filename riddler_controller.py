@@ -42,7 +42,7 @@ class controller(threading.Thread):
     # Sleep function that breaks, if controller is stopped
     def sleep(self, secs):
         for i in range(secs):
-            time.sleep(1)
+            time.sleep(1) #TIME!
             if self.end.is_set():
                 return True
         return False

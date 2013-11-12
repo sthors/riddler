@@ -338,7 +338,7 @@ class test_config(QGroupBox):
         self.time.setValue(args.test_time)
         self.sleep.setValue(args.test_sleep)
 
-    def get_args(self, args):
+    def get_args(self, args): #TIME!
         args.test_profile = self.profile.currentText()
         args.test_loops = self.loops.value()
         args.test_time = self.time.value()

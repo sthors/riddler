@@ -47,7 +47,7 @@ class sampler(threading.Thread):
             report = time.time()
             delay = interval - (time.time() - start)
             if delay > 0:
-                time.sleep(delay)
+                time.sleep(delay) #TIME!
             else:
                 self.report_error("Missed deadline with {} seconds".format(delay*-interval))
                 print("nc:     {}".format(nc - start))

@@ -8,7 +8,7 @@ import node_tester as tester
 import node_setup as setup
 import subprocess
 import os.path
-report_sleep = 1
+report_sleep = 1 #TIME!
 
 class server:
     def __init__(self, args):
@@ -17,7 +17,7 @@ class server:
     def create(self):
         self.server = SocketServer.TCPServer((self.args.host, self.args.port), tcp_handler, bind_and_activate=False) #make a server
         self.server.allow_reuse_address = True
-        self.server.timeout = 1
+        self.server.timeout = 1 #TIME!
         self.server.running = True
         self.server.args = self.args
         self.server.server_bind() #binds to desired address
@@ -148,7 +148,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
                 break
 
         # Report back to controller that we are ready
-        time.sleep(3)
+        time.sleep(1) #TIME!
         self.report(interface.node(interface.PREPARE_DONE)) #reporting to the controller that the node is ready
         print("# report  PREPARE_DONE") #DEBUG!
 
@@ -161,7 +161,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
         elif self.run_info and self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'):
             pass
         
-        print('# Start clients') #DEBUG!
+        print('# Start clients') #DEBUG! next node_tester.py, client, run
         for client in self.tester_clients:
             client.start()
         
@@ -170,18 +170,18 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
         
         if self.run_info and self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'):
             self.send_dummy_result()
-        elif self.run_info and self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'): #ADD_TEST!
+        elif self.run_info and self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'): #NEW_TEST! Only if source is not returning result
             self.rasp_send_dummy_result()
         
     def send_dummy_result(self): #RASP!
         try:
             if self.run_info['role'] == 'helper':
                 #print("  Sending dummy result")
-                time.sleep(report_sleep)
+                time.sleep(report_sleep) #TIME!
                 obj = interface.node(interface.RUN_RESULT, result=None)
                 self.report(obj)
         except AttributeError as e:
-            time.sleep(report_sleep)
+            time.sleep(report_sleep) #TIME!
             obj = interface.node(interface.RUN_ERROR, error=e)
             self.report(obj)
             print("  Run error: " + e)
@@ -192,12 +192,12 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
         try:
             if self.run_info['role'] == 'source':
                 print('# Sending dummy result') #DEBUG!
-                time.sleep(report_sleep)
+                time.sleep(report_sleep) #TIME!
                 obj = interface.node(interface.RUN_RESULT, result=None)
                 self.report(obj)
                 print("# report RUN_RESULT") #DEBUG!
         except AttributeError as e:
-            time.sleep(report_sleep)
+            time.sleep(report_sleep) #TIME!
             obj = interface.node(interface.RUN_ERROR, error=e)
             self.report(obj)
             print("  Run error: " + e)
@@ -227,7 +227,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
             client.stop() #INTEREST!
 
         # Report back to controller that we are done
-        time.sleep(report_sleep)
+        time.sleep(report_sleep) #TIME!
         self.report(interface.node(interface.FINISH_DONE))
         print("# report FINISH_DONE")#DEBUG!
 

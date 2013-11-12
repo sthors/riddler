@@ -73,7 +73,7 @@ class node(threading.Thread):
                     print("{0}: {1}".format(self.name.title(), e))
                 if e.errno in (1, 113, 111):
                     # Connection refused. Wait a bit
-                    time.sleep(5)
+                    time.sleep(5) #TIME!
 
                 # Tell controller that something went wrong
                 self.run_error = True
@@ -191,7 +191,7 @@ class node(threading.Thread):
     # Wait for node to answer last command
     def wait(self):
         while not self.end.is_set():
-            if self.reply.wait(5): #DEBUG_HYPO!
+            if self.reply.wait(1): #DEBUG_HYPO!
                 break
         if self.run_error:
             print("Wait error from {}".format(self.name))

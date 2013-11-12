@@ -84,7 +84,7 @@ class setup:
             print("  Killing previous instance of fox")
             self.fox_process.terminate()
             del self.fox_process
-            time.sleep(1)
+            time.sleep(1) #TIME!
 
         if run_info['coding'] == 'noloss':
             if os.path.exists(bat_path + loss_file):
@@ -129,18 +129,18 @@ class setup:
 
         print("  starting fox")
         self.fox_process = subprocess.Popen(cmd)
-        time.sleep(1)
+        time.sleep(1) #TIME!
 
         if run_info['coding'] in ('loss', 'noloss'):
             print("  killing fox due to (no)loss")
             self.fox_process.terminate()
-            time.sleep(1)
+            time.sleep(1) #TIME!
             del self.fox_process
 
         if run_info['coding'] == 'nohelper' and run_info['role'] == 'helper':
             print("  killing fox due to nohelper")
             self.fox_process.terminate()
-            time.sleep(1)
+            time.sleep(1) #TIME!
             del self.fox_process
 
         return True

@@ -82,7 +82,7 @@ class graph:
     def hide(self):
         ch = interface.get_keypress()
         pylab.close('all')
-        time.sleep(1)
+        time.sleep(1) #TIME!
         print("Closed")
 
     def save_figs(self, path):

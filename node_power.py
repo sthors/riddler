@@ -39,7 +39,7 @@ class power(threading.Thread):
         # Main loop while we are not told to end
         while not self.end.is_set():
             if not self.ser:
-                time.sleep(1)
+                time.sleep(1) #TIME!
                 continue
 
             # Read from arduino
