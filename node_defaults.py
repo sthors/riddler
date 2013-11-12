@@ -13,8 +13,8 @@ power_dev = '/dev/ttyUSB0'
 fox_path = '/root/rlncd/build/src/source'
 udp_path = '/root/fox/tools/'
 rasp_udp_path = "/home/pi/riddler/programs/"
-#program = '/nc4rasp'
-program = '/dummy_dest'
+program = '/nc4rasp'
+#program = '/dummy_dest'
 
 """
 #When using local host LOCAL_TEST! 
