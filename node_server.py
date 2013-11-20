@@ -13,7 +13,7 @@ report_sleep = 1 #TIME!
 class server:
     def __init__(self, args):
         self.args = args
-
+        
     def create(self):
         self.server = SocketServer.TCPServer((self.args.host, self.args.port), tcp_handler, bind_and_activate=False) #make a server
         self.server.allow_reuse_address = True
@@ -49,6 +49,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
         self.run_info = None
         self.lock = threading.Lock()
         #self.sampler = sampler.sampler(self, self.server.args)
+        self.sequence_manager = 1
         self.setup = setup.setup(self.server.args)
         self.send_node_info()
 
@@ -103,12 +104,22 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
 
     # Handle commands/data from controller
     def handle_cmd(self, obj): #Three commands during a test
+        time.sleep(0.1) #DEBUG!
         if obj.cmd is interface.PREPARE_RUN: #prepares the run
             self.prepare_run(obj)
+            if self.sequence_manager != 1:
+                print "# Error in command sequence of test. PREPARE_RUN"
+            self.sequence_manager = 2
         elif obj.cmd is interface.START_RUN: #starts the run
             self.start_run(obj)
+            if self.sequence_manager != 2:
+                print "# Error in command sequence of test. START_RUN"
+            self.sequence_manager = 3
         elif obj.cmd is interface.FINISH_RUN: #finishes the run
             self.finish_run(obj)
+            if self.sequence_manager != 3:
+                print "# Error in command sequence of test. FINNISH_RUN"
+            self.sequence_manager = 1
             print("# Finished run")
         else:
             print("Received unknown command: {0}".format(obj.cmd))
@@ -118,7 +129,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
         print("# Prepare run")
         self.run_info = obj.run_info #run info sendt from riddler controller
 
-        # Apply received configurations
+        # Apply received configuration
         if not self.setup.apply_setup(obj.run_info):
             self.report(interface.node(interface.PREPARE_ERROR, error=self.setup.error)) # Had a setup error
         # Inform the sampler about the new run
@@ -153,7 +164,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
         print("# report  PREPARE_DONE") #DEBUG!
 
     def start_run(self, obj):
-        print("# Start run")
+        print("# START RUN")
         
         #print "profile:",self.run_info['profile']
         if self.run_info and self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP! NEW_TEST!

@@ -24,6 +24,7 @@ class node(threading.Thread):
         self.total_idle = None
         self.run_result = None
         self.run_error = False
+        self.sequence_manager = 1
         nodes.append(self)
 
         self.end = threading.Event()
@@ -132,16 +133,27 @@ class node(threading.Thread):
         if obj.cmd is interface.NODE_INFO:
             self.handle_node_info(obj)
             print("# {} NODE_INFO".format(self.name))
+            if self.sequence_manager != 1:
+                print "# Error in command sequence of test. NODE_INFO"
+            self.sequence_manager = 2
             
         elif obj.cmd is interface.PREPARE_DONE:
             self.handle_prepare_done(obj)
             print("# {} PREPARE DONE".format(self.name))
+            if self.sequence_manager != 2:
+                print "# Error in command sequence of test. PREPARE_RUN"
+            self.sequence_manager = 3
+            
         elif obj.cmd is interface.PREPARE_ERROR:
             self.handle_prepare_error(obj)
             print("# {} PREPARE_ERROR".format(self.name))
+            
         elif obj.cmd is interface.RUN_RESULT:
             self.handle_run_result(obj)
             print("# {} RUN_RESULT".format(self.name))
+            if self.sequence_manager != 3:
+                print "# Error in command sequence of test. RUN_RESULT"
+            self.sequence_manager = 2
 
         elif obj.cmd is interface.RUN_ERROR:
             self.handle_run_error(obj)
@@ -191,7 +203,7 @@ class node(threading.Thread):
     # Wait for node to answer last command
     def wait(self):
         while not self.end.is_set():
-            if self.reply.wait(1): #DEBUG_HYPO!
+            if self.reply.wait(.1): #DEBUG_HYPO!
                 break
         if self.run_error:
             print("Wait error from {}".format(self.name))

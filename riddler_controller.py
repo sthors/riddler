@@ -474,12 +474,13 @@ class controller(threading.Thread):
         
     # Perform a run on each node
     def exec_node(self):
-        #print("# Starting nodes")  #DEBUG!
+        print("# STARTING NODES")  #DEBUG!
         # Start it
         for node in self.nodes:
             node.start_run()
-
+        #print("# STARTING NODES ARE STARTED") #DEBUG!
         # Wait for it to finish
+        print("# WAIT FOR RESULT")
         for node in self.nodes:
             # Check if an error occurred in the run
             if node.wait():
@@ -489,10 +490,10 @@ class controller(threading.Thread):
         if self.error and not self.end.is_set():
             for node in self.nodes:
                 node.reconnect()
-
+        print("# DONE EXECUTING NOTES")
     # Tell the nodes to clean up and wait for them to report back
     def finish_run(self):
-        #print("# Finnishing run")  #DEBUG!
+        print("# FINNISH RUN")  #DEBUG!
         for node in self.nodes:
             node.finish_run()
 
@@ -503,7 +504,7 @@ class controller(threading.Thread):
 
     
     def save_results(self):
-        #print("# Saving results")  #DEBUG!
+        print("# SAVE RESULTS")  #DEBUG!
         for node in self.nodes:
             #print "node:", node #DEBUG!
             result = node.get_result()
