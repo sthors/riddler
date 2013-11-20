@@ -166,7 +166,7 @@ class server(threading.Thread): #a thread is greated to all destinations
     def rasp_server(self):
         #l = str(self.iperf_len)
         #p = os.path.dirname(self.args.rasp_udp_path) + self.args.program #DUMMY_TEST! #LOCAL_TEST!
-        cop = os.path.dirname(self.args.rasp_udp_path) + "/dummy_dest_5"
+        p = os.path.dirname(self.args.rasp_udp_path) + "/dummy_dest_5"
         
         #print "meshport server:", self.args.mesh_port
         #print "port server:",self.args.port
