@@ -185,14 +185,15 @@ class riddler:
     def start_nodes(self):
         for node in self.nodes:
             node.start()
-
+        
         try:
             for node in self.nodes:
                 node.wait()
         except KeyboardInterrupt:
             print("Quit")
             self.quit()
-
+        time.sleep(5)
+        
     def set_pause(self, pause):
         if not self.controller:
             return

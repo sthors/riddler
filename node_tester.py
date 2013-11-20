@@ -186,7 +186,10 @@ class server(threading.Thread): #a thread is greated to all destinations
 
         self.p = subprocess.Popen(self.cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
         self.running = True
-        self.p.wait() #DEBUG_HYPO!
+        while self.p.poll() is None:
+            pass
+            
+        #self.p.wait() #DEBUG_HYPO!
         self.running = False
         
         print("server done")
