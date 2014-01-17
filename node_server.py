@@ -49,7 +49,8 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
         self.run_info = None
         self.lock = threading.Lock()
         #self.sampler = sampler.sampler(self, self.server.args)
-        self.sequence_manager = 1
+        self.sequence_manager = 1 #DEBUG!
+        self.loop_cnt = 0 #DEBUG!
         self.setup = setup.setup(self.server.args)
         self.send_node_info()
 
@@ -109,6 +110,8 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
             self.prepare_run(obj)
             if self.sequence_manager != 1:
                 print "# Error in command sequence of test. PREPARE_RUN"
+            self.loop_cnt = self.loop_cnt + 1
+            print("loop:" , self.loop_cnt)
             self.sequence_manager = 2
         elif obj.cmd is interface.START_RUN: #starts the run
             self.start_run(obj)
