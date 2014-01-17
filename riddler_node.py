@@ -76,7 +76,7 @@ class node(threading.Thread):
                     # Connection refused. Wait a bit
                     time.sleep(5) #TIME!
 
-                # Tell controller that something went wrong
+                # Tell controller that something went wrong #
                 self.run_error = True
                 self.socket = None
                 self.reply.set()

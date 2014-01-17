@@ -229,6 +229,7 @@ class controller(threading.Thread):
 
     # Control the state of each node and execute a single test run
     def execute_run(self):
+        time.sleep(2)
         print("# Executing run")  #DEBUG!
         while not self.end.is_set():
             # Make time stamp for use in ETA
@@ -323,7 +324,7 @@ class controller(threading.Thread):
     # Called by user or timer to recover
     def recover(self): #TASK! write to a debug file
         # Invalidate the current run
-        print("Error from recover")
+        #print("Error from recover")
         self.error = True
 
         # Restart timer to keep recovering
