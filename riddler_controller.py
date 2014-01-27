@@ -229,10 +229,14 @@ class controller(threading.Thread):
 
     # Control the state of each node and execute a single test run
     def execute_run(self):
-        time.sleep(2)
         print("# Executing run")  #DEBUG!
         while not self.end.is_set():
+            time.sleep(2)
             # Make time stamp for use in ETA
+            
+            if self.redo:
+                pass #Maybe build in some 
+            
             start = time.time()
 
             # Check if we should pause and rerun
