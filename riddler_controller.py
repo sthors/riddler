@@ -484,10 +484,10 @@ class controller(threading.Thread):
         
         for i in range(len(self.individual_info[0])):
             print self.individual_info[0]
-            print 'i:', i
-            print 'j:', j
+            #print 'i:', i
+            #print 'j:', j
             self.run_info[self.individual_info[0][i]] = self.individual_info[i+1][j]
-            print self.run_info[self.individual_info[0][i]]
+            #print self.run_info[self.individual_info[0][i]]
     # Reset counter if new loop is entered, increment otherwise
     def update_run_no(self, loop):
         if not self.run_info or loop != self.run_info['loop']:
