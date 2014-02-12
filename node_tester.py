@@ -180,8 +180,8 @@ class server(threading.Thread): #a thread is greated to all destinations
         r = "--rate=" + str(self.run_info['rate'])
         g = "--port=" + str(self.args.mesh_port)
         t = "--type=" + 'destination'
-        #d = "--format=" + "python"
-        d = "--output=" + "verbose"
+        d = "--format=" + "python"
+        #d = "--output=" + "python"
         
         self.cmd = [p, f, i, s, l, r, g, t, d]
         
