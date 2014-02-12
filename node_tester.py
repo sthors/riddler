@@ -19,7 +19,7 @@ class client(threading.Thread):
     def run(self): #
         if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP! NEW_TEST!
             self.python_client()
-        elif self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'):
+        elif self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep','rasp_link_quality'):
             print("# Running client") #DEBUG!
             self.rasp_client()
     
@@ -71,7 +71,7 @@ class client(threading.Thread):
         
         #print "meshport:", self.args.mesh_port
         #print "port:",self.args.port
-        
+        print self.run_info
         if self.args.program == '/nc4rasp':
             m = "--max_tx=" + str(self.run_info['max_tx'])
             h = "--host=" + "10.0.0.255" #"localhost" #RASP LOCAL_TEST!
@@ -87,7 +87,7 @@ class client(threading.Thread):
             p = os.path.dirname(self.args.rasp_udp_path) + self.args.program
             
             cmd = [p, h, f, i, s, l, r, g, t, m]
-            time.sleep(3) #RASP! #LOCAL_TEST! #TIME!
+            time.sleep(1) #RASP! #LOCAL_TEST! #TIME!
             print cmd
             
         elif self.args.program == '/task':
@@ -159,15 +159,17 @@ class server(threading.Thread): #a thread is greated to all destinations
     def run(self):
         if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP! NEW_TEST!
             self.python_server()
-        elif self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'):
+        elif self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep','rasp_link_quality'):
             print("# Running server")
             self.rasp_server()
+    
+    #INDIVIDUAL_NODE!
             
     def rasp_server(self):
         #l = str(self.iperf_len)
         p = os.path.dirname(self.args.rasp_udp_path) + self.args.program #DUMMY_TEST! #LOCAL_TEST!
         #p = os.path.dirname(self.args.rasp_udp_path) + "/dummy_dest_5"
-        
+        print self.run_info
         #print "meshport server:", self.args.mesh_port
         #print "port server:",self.args.port
         

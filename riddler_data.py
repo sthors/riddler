@@ -53,6 +53,7 @@ class data:
                 self.relays.append(name)
 
     def add_run_info(self, run_info):
+        #INDIVIDUAL_NODE!
         run_info = copy.deepcopy(run_info)
         run_no = run_info['run_no']
         loop = run_info['loop']

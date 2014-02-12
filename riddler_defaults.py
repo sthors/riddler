@@ -106,8 +106,12 @@ systematic = 1
 #RASP! ADD_ARG!
 # Settings for raspberry
 #
-fields = ['binary', 'binary8']  #FIELDS_EXAMPLE!
+fields = ['binary']  #FIELDS_EXAMPLE!
 max_tx = 500
+number_of_nodes = 3
+id = 0;
+
+rasp_id = ['1','2','3','4']
 
 #
 #Settings for plotting

@@ -9,6 +9,7 @@ class controller(threading.Thread):
         self.name = "   controller   "
         self.args = args
         self.run_info = {}
+        self.individual_info = [] #INDIVIDUAL_NODE!
 
         self.error = False
         self.redo = False
@@ -87,6 +88,9 @@ class controller(threading.Thread):
         
         elif profile == "rasp_symbols_sweep":
             self.test_rasp_symbols_sweep()
+            
+        elif profile == "rasp_link_quality":
+            self.test_link_quality()
         
         else:
             print("Profile '{0}' not supported.".format(profile))
@@ -111,8 +115,22 @@ class controller(threading.Thread):
                 print("# Plotting is disabled")
             
     
-    #RASP! NEW_TEST! FOR_LOOPS!
+    #RASP! NEW_TEST! FOR_LOOPS! INDIVIDUAL_NODE!
     #Control function to test rank on rasberry
+    def test_link_quality(self):
+        for loop in self.loops:
+            for field in self.fields: #FIELDS_EXAMPLE!
+                for symbols in self.symbols:
+                    num_nodes = list(range(self.number_of_nodes))
+                    self.individual_info = ['id',num_nodes]
+                    
+                    rate = self.args.rlnc_rates[True]
+                    self.set_run_info(loop=loop, rate=rate, field=field, symbols=symbols)
+                    self.execute_run()
+                    # Quit if we are told to
+                    if self.end.is_set():
+                        return
+    
     def test_rasp_symbols_sweep(self):
         for loop in self.loops:
             for field in self.fields: #FIELDS_EXAMPLE!
@@ -129,6 +147,8 @@ class controller(threading.Thread):
             for field in self.fields:
                 #print "field:",field  #DEBUG!
                 #print "loop:", loop  #DEBUG!
+                num_nodes = list(range(self.number_of_nodes)) #INDIVIDUAL_TEST!
+                self.individual_info = [['id'],num_nodes]
                 rate = self.args.rlnc_rates[True]
                 symbols = self.args.gen_size
                 self.set_run_info(loop=loop, rate=rate, field=field, symbols=symbols)
@@ -231,7 +251,7 @@ class controller(threading.Thread):
     def execute_run(self):
         print("# Executing run")  #DEBUG!
         while not self.end.is_set():
-            time.sleep(2)
+            time.sleep(1)
             # Make time stamp for use in ETA
             
             if self.redo:
@@ -243,7 +263,7 @@ class controller(threading.Thread):
             print("waiting.. one") #DEBUG!
             self.wait_pause()
             print("wait over") #DEBUG!
-            self.prepare_run()
+            self.prepare_run() #INDIVIDUAL_NODE!
             self.test_num += 1
 
             # Let the network settle before next test
@@ -276,7 +296,7 @@ class controller(threading.Thread):
                     if not self.save_samples():
                         print("Samples failed; redoing test")
                         continue
-                elif self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'): #ADD_TEST!
+                elif self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep','rasp_link_quality'): #ADD_TEST!
                     pass
                     """
                     if not self.save_samples():
@@ -397,6 +417,7 @@ class controller(threading.Thread):
             self.codings = [True]
             self.rates = range(args.rate_start, args.rate_stop+1, args.rate_step)
             self.test_count = args.test_loops * len(self.codings)
+            self.number_of_nodes = args.number_of_nodes #INDIVIDUAL_TEST!
             self.result_format = "{:10s} Received packets: {received_packets:6.1f} | Last transmitted seq num: {last_transmitted_seq_num:6.1f}"
             self.run_info_format = "\n# loop cnt:{loop:2d} | field: {field:10s}"
             self.fields = args.fields
@@ -448,12 +469,25 @@ class controller(threading.Thread):
         self.run_info['test_num'] = self.test_num
         self.run_info['field'] = kwarg.get('field') #PASP! ADD syntax when comming from riddler_defaults.py
         self.run_info['max_tx'] = self.args.max_tx #RASP! ADD_ARG! syntax when comming from parser
+        self.run_info['number_of_nodes'] = self.args.number_of_nodes
         self.run_info['filename'] = self.args.filename
         self.run_info['symbols'] = kwarg.get('symbols')
+        self.run_info['id'] = kwarg.get('id')
+        #INDIVIDUAL_NODE! ADD the individual id
         
         # Update the data storage with the new run info
-        self.data.add_run_info(self.run_info)
+        #print self.run_info
+        self.data.add_run_info(self.run_info)#INDIVIDUAL_NODE! uncomment
 
+    def update_run_info_individual_settings(self, j):
+        #self.run_info['id'] = self.args.id
+        
+        for i in range(len(self.individual_info[0])):
+            print self.individual_info[0]
+            print 'i:', i
+            print 'j:', j
+            self.run_info[self.individual_info[0][i]] = self.individual_info[i+1][j]
+            print self.run_info[self.individual_info[0][i]]
     # Reset counter if new loop is entered, increment otherwise
     def update_run_no(self, loop):
         if not self.run_info or loop != self.run_info['loop']:
@@ -471,8 +505,14 @@ class controller(threading.Thread):
 
         # Start timer to recover in case of failure
         self.restart_timer()
-        for node in self.nodes:
+        j = 0
+        for node in self.nodes:#INDIVIDUAL_NODE!
+            #INDIVIDUAL_NODE! Insert a function which update run_info with individual data
+            #Two methods look at test or node type
+            if self.individual_info:
+                self.update_run_info_individual_settings(j)
             node.prepare_run(self.run_info)
+            j = j + 1
         
         for node in self.nodes:
             node.wait()

@@ -71,6 +71,8 @@ parser.add_argument("--max_tx", type=int)
 parser.add_argument("--filename", type=str) #This is the filename for the datafile
 parser.add_argument("--plot_enable", type=int) #1: Enables plotting. 0: Disable plotting
 parser.add_argument("--plot_list", type=list)
+parser.add_argument("--number_of_nodes", type=int)
+parser.add_argument("--id", type=int)
 parser.set_defaults(**defaults)
 args = parser.parse_args()
 

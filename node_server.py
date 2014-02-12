@@ -144,6 +144,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
         if self.tester_server: #Kills any remaining tester servers
             self.tester_server.kill()
         
+        #INDIVIDUAL_NODE!
         
         if self.run_info['role'] == "destination": #if the node is a destination
             self.tester_server = tester.server(self, self.server.args, obj.run_info)
@@ -158,7 +159,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
         for node in obj.dests:
             client = tester.client(self, node, obj.run_info, self.server.args)
             self.tester_clients.append(client)
-            if self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'): #RASP! #ADD_TEST! #NEW_TEST! #only one source is needed
+            if self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep','rasp_link_quality'): #RASP! #ADD_TEST! #NEW_TEST! #only one source is needed
                 break
 
         # Report back to controller that we are ready
@@ -172,7 +173,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
         #print "profile:",self.run_info['profile']
         if self.run_info and self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP! NEW_TEST!
             self.send_sample()
-        elif self.run_info and self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'):
+        elif self.run_info and self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep','rasp_link_quality'):
             pass
         
         print('# Start clients') #DEBUG! next node_tester.py, client, run
@@ -184,7 +185,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
         
         if self.run_info and self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'):
             self.send_dummy_result()
-        elif self.run_info and self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'): #NEW_TEST! Only if source is not returning result
+        elif self.run_info and self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep','rasp_link_quality'): #NEW_TEST! Only if source is not returning result
             self.rasp_send_dummy_result()
         
     def send_dummy_result(self): #RASP!
@@ -223,7 +224,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
         
         if self.run_info['profile'] in ( 'udp_rates', 'power_meas','udp_ratios','hold_times','tcp_algos','tcp_windows','rlnc'): #RASP! NEW_TEST!
             self.send_sample(finish=True)
-        elif self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep'):
+        elif self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep','rasp_link_quality'):
             pass
 
         if self.run_info and self.run_info['coding'] == 'helper' and not self.setup.check_fox():
