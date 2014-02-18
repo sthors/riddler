@@ -119,16 +119,17 @@ class controller(threading.Thread):
     #Control function to test rank on rasberry
     def test_link_quality(self):
         for loop in self.loops:
-            num_nodes = list(range(self.number_of_nodes))
-            self.individual_info = [['id'],num_nodes]
-            symbols = self.args.gen_size
-            rate = self.args.rlnc_rates[True]
-            linkquality = 'true'
-            self.set_run_info(loop=loop, rate=rate, field=field, symbols=symbols, linkquality=linkquality)
-            self.execute_run()
-            # Quit if we are told to
-            if self.end.is_set():
-                return
+            for field in self.fields:
+                num_nodes = list(range(self.number_of_nodes))
+                self.individual_info = [['id'],num_nodes]
+                symbols = self.args.gen_size
+                rate = self.args.rlnc_rates[True]
+                linkquality = 'true'
+                self.set_run_info(loop=loop, rate=rate, field=field, symbols=symbols, linkquality=linkquality)
+                self.execute_run()
+                # Quit if we are told to
+                if self.end.is_set():
+                    return
     
     def test_rasp_symbols_sweep(self):
         for loop in self.loops:
@@ -482,7 +483,7 @@ class controller(threading.Thread):
         self.run_info['filename'] = self.args.filename
         self.run_info['symbols'] = kwarg.get('symbols')
         self.run_info['id'] = kwarg.get('id')
-        self.run_info['linkquality'] = self.args.linkquality
+        self.run_info['linkquality'] = kwarg.get('linkquality')
         #INDIVIDUAL_NODE! ADD the individual id
         
         # Update the data storage with the new run info

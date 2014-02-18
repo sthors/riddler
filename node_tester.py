@@ -68,10 +68,10 @@ class client(threading.Thread):
 
     def rasp_client(self):
         #The command given to the c++ program
-        
         #print "meshport:", self.args.mesh_port
         #print "port:",self.args.port
         print self.run_info
+        #ADD_ARG!
         if self.args.program == '/nc4rasp':
             m = "--max_tx=" + str(self.run_info['max_tx'])
             h = "--host=" + "10.0.0.255" #"localhost" #RASP LOCAL_TEST!
@@ -166,6 +166,7 @@ class server(threading.Thread): #a thread is greated to all destinations
     #INDIVIDUAL_NODE!
             
     def rasp_server(self):
+        #ADD_ARG!
         #l = str(self.iperf_len)
         p = os.path.dirname(self.args.rasp_udp_path) + self.args.program #DUMMY_TEST! #LOCAL_TEST!
         #p = os.path.dirname(self.args.rasp_udp_path) + "/dummy_dest_5"
@@ -182,8 +183,9 @@ class server(threading.Thread): #a thread is greated to all destinations
         t = "--type=" + 'destination'
         d = "--format=" + "python"
         q = "--linkquality=" + self.run_info['linkquality']
+        n = "--id=" + self.run_info['id']
         #d = "--output=" + "python
-        self.cmd = [p, f, i, s, l, r, g, t, d, q]
+        self.cmd = [p, f, i, s, l, r, g, t, d, q, n]
         
         print("  Starting server: {}".format(self.cmd)) #DEBUG!
 
