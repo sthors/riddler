@@ -135,8 +135,11 @@ class controller(threading.Thread):
         for loop in self.loops:
             for field in self.fields: #FIELDS_EXAMPLE!
                 for symbols in self.symbols:
+                    num_nodes = list(range(self.number_of_nodes)) #INDIVIDUAL_TEST!
+                    self.individual_info = [['id'],num_nodes]
                     rate = self.args.rlnc_rates[True]
-                    self.set_run_info(loop=loop, rate=rate, field=field, symbols=symbols)
+                    linkquality = 'false'
+                    self.set_run_info(loop=loop, rate=rate, field=field, symbols=symbols, linkquality=linkquality)
                     self.execute_run()
                     # Quit if we are told to
                     if self.end.is_set():
@@ -151,7 +154,8 @@ class controller(threading.Thread):
                 self.individual_info = [['id'],num_nodes]
                 rate = self.args.rlnc_rates[True]
                 symbols = self.args.gen_size
-                self.set_run_info(loop=loop, rate=rate, field=field, symbols=symbols)
+                linkquality = 'false'
+                self.set_run_info(loop=loop, rate=rate, field=field, symbols=symbols, linkquality=linkquality)
                 self.execute_run()
                 # Quit if we are told to
                 if self.end.is_set():
