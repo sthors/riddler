@@ -73,6 +73,7 @@ parser.add_argument("--plot_enable", type=int) #1: Enables plotting. 0: Disable 
 parser.add_argument("--plot_list", type=list)
 parser.add_argument("--number_of_nodes", type=int)
 parser.add_argument("--id", type=int)
+parser.add_argument("--linkquality", type=str)
 parser.set_defaults(**defaults)
 args = parser.parse_args()
 

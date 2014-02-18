@@ -119,17 +119,16 @@ class controller(threading.Thread):
     #Control function to test rank on rasberry
     def test_link_quality(self):
         for loop in self.loops:
-            for field in self.fields: #FIELDS_EXAMPLE!
-                for symbols in self.symbols:
-                    num_nodes = list(range(self.number_of_nodes))
-                    self.individual_info = ['id',num_nodes]
-                    
-                    rate = self.args.rlnc_rates[True]
-                    self.set_run_info(loop=loop, rate=rate, field=field, symbols=symbols)
-                    self.execute_run()
-                    # Quit if we are told to
-                    if self.end.is_set():
-                        return
+            num_nodes = list(range(self.number_of_nodes))
+            self.individual_info = [['id'],num_nodes]
+            symbols = self.args.gen_size
+            rate = self.args.rlnc_rates[True]
+            linkquality = 'true'
+            self.set_run_info(loop=loop, rate=rate, field=field, symbols=symbols, linkquality=linkquality)
+            self.execute_run()
+            # Quit if we are told to
+            if self.end.is_set():
+                return
     
     def test_rasp_symbols_sweep(self):
         for loop in self.loops:
@@ -430,6 +429,15 @@ class controller(threading.Thread):
             self.fields = args.fields #FIELDS_EXAMPLE!
             self.result_format = "{:10s} Received packets: {received_packets:6.1f} | Last transmitted seq num: {last_transmitted_seq_num:6.1f}"
             self.run_info_format = "\n# loop cnt:{loop:2d} | field: {field:10s} | symbols: {symbols:3d}"
+        
+        if args.test_profile == 'rasp_link_quality':
+            self.protocol = 'udp'
+            self.symbols = range(args.symbols_start, args.symbols_stop+1, args.symbols_step)
+            self.codings = [True]
+            self.test_count = args.test_loops * len(self.codings)
+            self.fields = args.fields #FIELDS_EXAMPLE!
+            self.result_format = "none"#"{:10s} Received packets: {received_packets:6.1f} | Last transmitted seq num: {last_transmitted_seq_num:6.1f}"
+            self.run_info_format ="none" #"\n# loop cnt:{loop:2d} | field: {field:10s} | symbols: {symbols:3d}"
             #RASP! NEW_TEST! TEST_SPECIFIC_SETUP!
         
     # Configure the next run_info to be sent to each node
@@ -473,6 +481,7 @@ class controller(threading.Thread):
         self.run_info['filename'] = self.args.filename
         self.run_info['symbols'] = kwarg.get('symbols')
         self.run_info['id'] = kwarg.get('id')
+        self.run_info['linkquality'] = self.args.linkquality
         #INDIVIDUAL_NODE! ADD the individual id
         
         # Update the data storage with the new run info
@@ -483,7 +492,7 @@ class controller(threading.Thread):
         #self.run_info['id'] = self.args.id
         
         for i in range(len(self.individual_info[0])):
-            print self.individual_info[0]
+            #print self.individual_info[0]
             #print 'i:', i
             #print 'j:', j
             self.run_info[self.individual_info[0][i]] = self.individual_info[i+1][j]

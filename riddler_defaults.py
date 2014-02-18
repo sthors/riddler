@@ -109,6 +109,7 @@ systematic = 1
 fields = ['binary']  #FIELDS_EXAMPLE!
 max_tx = 500
 number_of_nodes = 3
+linkquality='false'
 id = 0;
 
 rasp_id = ['1','2','3','4']
