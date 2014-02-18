@@ -181,9 +181,9 @@ class server(threading.Thread): #a thread is greated to all destinations
         g = "--port=" + str(self.args.mesh_port)
         t = "--type=" + 'destination'
         d = "--format=" + "python"
-        #d = "--output=" + "python"
-        
-        self.cmd = [p, f, i, s, l, r, g, t, d]
+        q = "--linkquality=" + self.run_info['linkquality']
+        #d = "--output=" + "python
+        self.cmd = [p, f, i, s, l, r, g, t, d, q]
         
         print("  Starting server: {}".format(self.cmd)) #DEBUG!
 

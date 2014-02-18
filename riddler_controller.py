@@ -436,6 +436,7 @@ class controller(threading.Thread):
             self.codings = [True]
             self.test_count = args.test_loops * len(self.codings)
             self.fields = args.fields #FIELDS_EXAMPLE!
+            self.number_of_nodes = args.number_of_nodes #INDIVIDUAL_TEST!
             self.result_format = "none"#"{:10s} Received packets: {received_packets:6.1f} | Last transmitted seq num: {last_transmitted_seq_num:6.1f}"
             self.run_info_format ="none" #"\n# loop cnt:{loop:2d} | field: {field:10s} | symbols: {symbols:3d}"
             #RASP! NEW_TEST! TEST_SPECIFIC_SETUP!
