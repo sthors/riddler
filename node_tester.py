@@ -183,7 +183,7 @@ class server(threading.Thread): #a thread is greated to all destinations
         t = "--type=" + 'destination'
         d = "--format=" + "python"
         q = "--linkquality=" + self.run_info['linkquality']
-        n = "--id=" + self.run_info['id']
+        n = "--id=" + str(self.run_info['id'])
         #d = "--output=" + "python
         self.cmd = [p, f, i, s, l, r, g, t, d, q, n]
         
