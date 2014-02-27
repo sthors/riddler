@@ -264,9 +264,9 @@ class controller(threading.Thread):
             start = time.time()
 
             # Check if we should pause and rerun
-            print("waiting.. one") #DEBUG!
+            #print("waiting.. one") #DEBUG!
             self.wait_pause()
-            print("wait over") #DEBUG!
+            #print("wait over") #DEBUG!
             self.prepare_run() #INDIVIDUAL_NODE!
             self.test_num += 1
 
@@ -279,10 +279,10 @@ class controller(threading.Thread):
 
             # Let the nodes clean up and save data
             self.finish_run()
-            print("# Waiting...") #DEBUG!
+            #print("# Waiting...") #DEBUG!
             # Check if we should pause and rerun
             self.wait_pause()
-            print("#Waiting is done") #DEBUG!
+            #print("#Waiting is done") #DEBUG!
             # Decide on the next action
             if self.end.is_set(): #DEBUG_HYPO!
                 # Quit
@@ -316,6 +316,8 @@ class controller(threading.Thread):
 
             else:
                 # Test failed, run it again
+                print("Take a chill pill:) We experienced an error and the test will return in a moment...")
+                time.sleep(120) #CHANGE!
                 print("Redoing test")
                 self.redo = True
 
@@ -323,7 +325,7 @@ class controller(threading.Thread):
     def wait_pause(self):
         # Check the user setting
         if self.pause.is_set():
-            print("# pause is set") #DEBUG!
+            #print("# pause is set") #DEBUG!
             # Nope, we don't pause
             return False
 
@@ -356,6 +358,7 @@ class controller(threading.Thread):
         self.error = True
 
         # Restart timer to keep recovering
+        #time.sleep(120) #CHANGE!
         self.restart_timer()
 
         # Reconnect nodes
@@ -443,7 +446,7 @@ class controller(threading.Thread):
             self.fields = args.fields #FIELDS_EXAMPLE!
             self.number_of_nodes = args.number_of_nodes #INDIVIDUAL_TEST!
             self.result_format = "none"#"{:10s} Received packets: {received_packets:6.1f} | Last transmitted seq num: {last_transmitted_seq_num:6.1f}"
-            self.run_info_format ="none" #"\n# loop cnt:{loop:2d} | field: {field:10s} | symbols: {symbols:3d}"
+            self.run_info_format ="\n# loop cnt:{loop:2d} | field: {field:10s} | symbols: {symbols:3d}"
             #RASP! NEW_TEST! TEST_SPECIFIC_SETUP!
         
     # Configure the next run_info to be sent to each node
@@ -574,7 +577,7 @@ class controller(threading.Thread):
                 continue
             self.data.add_result(node.name, result, self.run_info)
             self.print_result(node, result)
-            #print "save_result riddler_controller result:",result #CHANGE!
+            #print "save_result riddler_controller result:",result 
             
 
     # Save sample measurements received during the test

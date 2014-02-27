@@ -176,7 +176,7 @@ class tcp_handler(SocketServer.BaseRequestHandler): #request handler class with 
         elif self.run_info and self.run_info['profile'] in ('rasp_rank', 'rasp_symbols_sweep','rasp_link_quality'):
             pass
         
-        print('# Start clients') #DEBUG! next node_tester.py, client, run
+        #print('# Start clients') #DEBUG! next node_tester.py, client, run
         for client in self.tester_clients:
             client.start()
         

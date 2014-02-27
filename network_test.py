@@ -3,7 +3,7 @@ import riddler_node as node
 
 #alice = node.node("source", "localhost")
 #bob = node.node("destination", "localhost", 8898)
-alice = node.node("source", "rasp12.lab.es.aau.dk")
+alice = node.node("source", "rasp13.lab.es.aau.dk")
 
 bob = node.node("destination", "rasp15.lab.es.aau.dk")
 #catja = node.node("destination", "rasp02.lab.es.aau.dk")

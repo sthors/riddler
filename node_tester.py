@@ -4,6 +4,7 @@ import subprocess
 import time
 import re
 import riddler_interface as interface
+#from random import randint #LOCAL_TEST!
 
 class client(threading.Thread):
     def __init__(self, controller, dest_node, run_info, args):
@@ -70,7 +71,7 @@ class client(threading.Thread):
         #The command given to the c++ program
         #print "meshport:", self.args.mesh_port
         #print "port:",self.args.port
-        print self.run_info
+        #print self.run_info #DEBUG!
         #ADD_ARG!
         if self.args.program == '/nc4rasp':
             m = "--max_tx=" + str(self.run_info['max_tx'])
@@ -182,13 +183,13 @@ class server(threading.Thread): #a thread is greated to all destinations
         g = "--port=" + str(self.args.mesh_port)
         t = "--type=" + 'destination'
         d = "--format=" + "python"
-        q = "--linkquality=" + self.run_info['linkquality']
-        n = "--id=" + str(self.run_info['id'])
+        q = "--linkquality=" + self.run_info['linkquality'] #LOCAL_TEST!
+        n = "--id=" + str(self.run_info['id']) #LOCAL_TEST!
         #d = "--output=" + "python
-        self.cmd = [p, f, i, s, l, r, g, t, d, q, n]
+        self.cmd = [p, f, i, s, l, r, g, t, d, q, n]#LOCAL_TEST!
         
         print("  Starting server: {}".format(self.cmd)) #DEBUG!
-
+        
         self.p = subprocess.Popen(self.cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
         self.running = True
         """
@@ -216,6 +217,8 @@ class server(threading.Thread): #a thread is greated to all destinations
         result = eval(stdout)
 
         if result:
+            #if randint(1,10) < 3:
+            #    time.sleep(40)#LOCAL_TEST!
             obj = interface.node(interface.RUN_RESULT, result=result)
             self.controller.report(obj)
             print("# Result is send ")
