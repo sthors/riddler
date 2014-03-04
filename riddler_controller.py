@@ -317,7 +317,8 @@ class controller(threading.Thread):
             else:
                 # Test failed, run it again
                 print("Take a chill pill:) We experienced an error and the test will return in a moment...")
-                time.sleep(120) #CHANGE!
+                #time.sleep(120) #CHANGE!
+                time.sleep(60) #CHANGE!
                 print("Redoing test")
                 self.redo = True
 
@@ -540,6 +541,7 @@ class controller(threading.Thread):
         print("# STARTING NODES")  #DEBUG!
         # Start it
         for node in self.nodes:
+            time.sleep(0.01)
             node.start_run()
         #print("# STARTING NODES ARE STARTED") #DEBUG!
         # Wait for it to finish
